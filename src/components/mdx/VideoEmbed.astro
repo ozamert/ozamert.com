@@ -89,8 +89,8 @@ const embedUrl = resolveEmbedUrl(src);
     position: relative;
     width: 100%;
     overflow: hidden;
-    border: 1px solid rgba(255, 255, 255, 0.08);
-    background: #0a0a0a;
+    border: 1px solid var(--border);
+    background: var(--bg-elev);
   }
 
   .video-embed__iframe {
@@ -107,7 +107,7 @@ const embedUrl = resolveEmbedUrl(src);
     font-size: 14px;
     font-style: italic;
     opacity: 0.5;
-    color: #e5e7eb;
+    color: var(--fg);
     font-family: var(--font-inter, Inter, sans-serif);
     line-height: 1.5;
   }

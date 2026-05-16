@@ -81,8 +81,8 @@ const { filename, lang } = Astro.props;
 <style>
   .code-block {
     margin: 24px 0;
-    border: 1px solid rgba(255, 255, 255, 0.08);
-    background: #0a0a0a;
+    border: 1px solid var(--border);
+    background: var(--bg-elev);
     font-family: var(--font-inter, Inter, sans-serif);
   }
 
@@ -91,20 +91,20 @@ const { filename, lang } = Astro.props;
     align-items: center;
     justify-content: space-between;
     padding: 8px 16px;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    border-bottom: 1px solid var(--border);
   }
 
   .code-block__filename {
     font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
     font-size: 13px;
-    color: #e5e7eb;
+    color: var(--fg);
     opacity: 0.5;
   }
 
   .code-block__lang {
     font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
     font-size: 12px;
-    color: #e5e7eb;
+    color: var(--fg);
     opacity: 0.35;
     text-transform: lowercase;
   }
@@ -129,7 +129,7 @@ const { filename, lang } = Astro.props;
     font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
     font-size: 14px;
     line-height: 1.6;
-    color: #e5e7eb;
+    color: var(--fg);
     background: transparent;
   }
 
@@ -140,8 +140,8 @@ const { filename, lang } = Astro.props;
     padding: 3px 10px;
     font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
     font-size: 12px;
-    color: #e5e7eb;
-    background: rgba(255, 255, 255, 0.06);
+    color: var(--fg);
+    background: var(--watermark);
     border: 1px solid rgba(255, 255, 255, 0.12);
     border-radius: 0;
     cursor: pointer;
@@ -151,7 +151,7 @@ const { filename, lang } = Astro.props;
 
   .code-block__copy:hover {
     background: rgba(255, 255, 255, 0.12);
-    color: #ffffff;
+    color: var(--hi);
   }
 
   .code-block__copy:focus-visible {

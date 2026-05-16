@@ -48,8 +48,8 @@ const { src, alt, caption, width } = Astro.props;
   .image-fig__img {
     display: block;
     max-width: 100%;
-    background: #0a0a0a;
-    border: 1px solid rgba(255, 255, 255, 0.08);
+    background: var(--bg-elev);
+    border: 1px solid var(--border);
     border-radius: 0;
   }
 
@@ -58,7 +58,7 @@ const { src, alt, caption, width } = Astro.props;
     font-size: 14px;
     font-style: italic;
     opacity: 0.5;
-    color: #e5e7eb;
+    color: var(--fg);
     font-family: var(--font-inter, Inter, sans-serif);
     line-height: 1.5;
   }

@@ -109,9 +109,20 @@ const isActive = (href: string) => pathname === href || pathname.startsWith(href
             <circle cx="5" cy="19" r="1" fill="currentColor"/>
           </svg>
         </a>
-        <button class="icon-btn" title="Toggle theme" aria-label="Toggle theme">
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+        <button class="icon-btn theme-toggle" title="Toggle theme" aria-label="Toggle theme">
+          <svg class="icon-moon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
             <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+          </svg>
+          <svg class="icon-sun" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+            <circle cx="12" cy="12" r="4"/>
+            <line x1="12" y1="2" x2="12" y2="4"/>
+            <line x1="12" y1="20" x2="12" y2="22"/>
+            <line x1="4.93" y1="4.93" x2="6.34" y2="6.34"/>
+            <line x1="17.66" y1="17.66" x2="19.07" y2="19.07"/>
+            <line x1="2" y1="12" x2="4" y2="12"/>
+            <line x1="20" y1="12" x2="22" y2="12"/>
+            <line x1="4.93" y1="19.07" x2="6.34" y2="17.66"/>
+            <line x1="17.66" y1="6.34" x2="19.07" y2="4.93"/>
           </svg>
         </button>
       </div>
@@ -124,8 +135,8 @@ const isActive = (href: string) => pathname === href || pathname.startsWith(href
     position: sticky;
     top: 0;
     z-index: 100;
-    background: #050505;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    background: var(--bg);
+    border-bottom: 1px solid var(--border);
     padding: 16px 24px;
   }
 
@@ -141,12 +152,12 @@ const isActive = (href: string) => pathname === href || pathname.startsWith(href
     font-family: var(--font-inter, Inter, sans-serif);
     font-size: 16px;
     font-weight: 500;
-    color: #e5e7eb;
+    color: var(--fg);
     text-decoration: none;
     letter-spacing: -0.01em;
     flex-shrink: 0;
   }
-  .site-name:hover { color: #ffffff; }
+  .site-name:hover { color: var(--hi); }
 
   .spacer { flex: 1; }
 
@@ -169,8 +180,8 @@ const isActive = (href: string) => pathname === href || pathname.startsWith(href
     font-weight: 500;
     letter-spacing: 0.06em;
     padding: 4px 8px;
-    border: 1px solid rgba(255, 255, 255, 0.08);
-    color: #e5e7eb;
+    border: 1px solid var(--border);
+    color: var(--fg);
     opacity: 0.6;
     text-decoration: none;
     text-transform: uppercase;
@@ -178,14 +189,14 @@ const isActive = (href: string) => pathname === href || pathname.startsWith(href
   }
   .badge:hover {
     opacity: 1;
-    color: #ffffff;
-    border-color: rgba(255, 255, 255, 0.2);
+    color: var(--hi);
+    border-color: var(--border-strong);
   }
   .badge.active {
     opacity: 1;
-    color: #ffffff;
-    border-color: rgba(255, 255, 255, 0.3);
-    background: rgba(255, 255, 255, 0.04);
+    color: var(--hi);
+    border-color: var(--border-strong);
+    background: var(--dot-grid);
   }
 
   /* Work group (projects text + demos icon) */
@@ -197,27 +208,27 @@ const isActive = (href: string) => pathname === href || pathname.startsWith(href
   .text-link {
     font-family: var(--font-inter, Inter, sans-serif);
     font-size: 14px;
-    color: #e5e7eb;
+    color: var(--fg);
     text-decoration: none;
     opacity: 0.7;
     transition: opacity 160ms ease, color 160ms ease;
   }
   .text-link:hover, .text-link.active {
     opacity: 1;
-    color: #ffffff;
+    color: var(--hi);
   }
   .icon-link {
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    color: #e5e7eb;
+    color: var(--fg);
     opacity: 0.6;
     text-decoration: none;
     transition: opacity 160ms ease, color 160ms ease;
   }
   .icon-link:hover, .icon-link.active {
     opacity: 1;
-    color: #ffffff;
+    color: var(--hi);
   }
 
   /* Separator dots */
@@ -240,7 +251,7 @@ const isActive = (href: string) => pathname === href || pathname.startsWith(href
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    color: #e5e7eb;
+    color: var(--fg);
     opacity: 0.6;
     text-decoration: none;
     background: none;
@@ -254,7 +265,7 @@ const isActive = (href: string) => pathname === href || pathname.startsWith(href
   .icon-btn:hover,
   .icon-group a.active {
     opacity: 1;
-    color: #ffffff;
+    color: var(--hi);
   }
 
   @media (max-width: 768px) {
@@ -263,4 +274,29 @@ const isActive = (href: string) => pathname === href || pathname.startsWith(href
     .badge-group, .icon-group, .work-group { gap: 8px; }
     .sep { display: none; }
   }
+
+  /* Sun/moon icon swap — show moon when dark, sun when light */
+  .theme-toggle .icon-sun { display: none; }
+  .theme-toggle .icon-moon { display: inline-flex; }
+  :global(html[data-theme="light"]) .theme-toggle .icon-moon { display: none; }
+  :global(html[data-theme="light"]) .theme-toggle .icon-sun { display: inline-flex; }
 </style>
+
+<script is:inline>
+  (function() {
+    var btn = document.querySelector('.theme-toggle');
+    if (!btn) return;
+    btn.addEventListener('click', function() {
+      var current = document.documentElement.getAttribute('data-theme');
+      var next = current === 'light' ? 'dark' : 'light';
+      if (next === 'light') {
+        document.documentElement.setAttribute('data-theme', 'light');
+      } else {
+        document.documentElement.removeAttribute('data-theme');
+      }
+      try {
+        localStorage.setItem('theme', next);
+      } catch (e) {}
+    });
+  })();
+</script>

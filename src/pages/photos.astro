@@ -111,8 +111,8 @@ const navItems = [
     position: relative;
     overflow: hidden;
     cursor: zoom-in;
-    background: #0a0a0a;
-    border: 1px solid rgba(255, 255, 255, 0.04);
+    background: var(--bg-elev);
+    border: 1px solid var(--dot-grid);
     display: block;
     width: 100%;
     text-decoration: none;
@@ -198,13 +198,13 @@ const navItems = [
     font-size: 13px;
     color: rgba(255, 255, 255, 0.7);
   }
-  .lightbox .lb-meta .lb-title { font-family: var(--font-inter, Inter, sans-serif); font-size: 14px; color: #e5e7eb; opacity: 0.9; }
+  .lightbox .lb-meta .lb-title { font-family: var(--font-inter, Inter, sans-serif); font-size: 14px; color: var(--fg); opacity: 0.9; }
   .lightbox .lb-meta .where { opacity: 0.65; }
   .lightbox .lb-meta .count { opacity: 0.45; }
   .lightbox button {
     position: absolute; top: 50%; transform: translateY(-50%);
-    background: transparent; color: #e5e7eb;
-    border: 1px solid rgba(255, 255, 255, 0.08);
+    background: transparent; color: var(--fg);
+    border: 1px solid var(--border);
     width: 44px; height: 44px;
     font: inherit; font-size: 20px;
     cursor: pointer;
@@ -212,7 +212,7 @@ const navItems = [
     transition: opacity 160ms ease, border-color 160ms ease;
     display: flex; align-items: center; justify-content: center;
   }
-  .lightbox button:hover { opacity: 1; border-color: rgba(255, 255, 255, 0.25); color: #fff; }
+  .lightbox button:hover { opacity: 1; border-color: var(--border-strong); color: var(--hi); }
   .lightbox .prev { left: -56px; }
   .lightbox .next { right: -56px; }
   .lightbox .close { top: -56px; right: -4px; transform: none; width: 36px; height: 36px; font-size: 16px; }

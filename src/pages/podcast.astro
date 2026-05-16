@@ -81,7 +81,7 @@ const fmtDate = (d: Date) =>
   .page-title {
     font-size: 32px;
     font-weight: 500;
-    color: #ffffff;
+    color: var(--hi);
     margin: 0 0 8px 0;
     letter-spacing: -0.02em;
   }
@@ -89,7 +89,7 @@ const fmtDate = (d: Date) =>
   .page-subtitle {
     font-size: 16px;
     font-style: italic;
-    color: #e5e7eb;
+    color: var(--fg);
     opacity: 0.5;
     margin: 0 0 56px 0;
   }
@@ -101,14 +101,14 @@ const fmtDate = (d: Date) =>
   .section-title {
     font-size: 24px;
     font-weight: 500;
-    color: #e5e7eb;
+    color: var(--fg);
     margin: 0 0 24px 0;
     letter-spacing: -0.01em;
   }
 
   .empty {
     font-size: 14px;
-    color: #e5e7eb;
+    color: var(--fg);
     opacity: 0.4;
     font-style: italic;
   }
@@ -121,7 +121,7 @@ const fmtDate = (d: Date) =>
 
   .episode-item {
     padding: 16px 0;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+    border-bottom: 1px solid var(--watermark);
   }
 
   .episode-item:last-child {
@@ -138,13 +138,13 @@ const fmtDate = (d: Date) =>
   .episode-title {
     font-size: 16px;
     font-weight: 500;
-    color: #e5e7eb;
+    color: var(--fg);
     line-height: 1.4;
   }
 
   .listen-link {
     font-size: 13px;
-    color: #e5e7eb;
+    color: var(--fg);
     opacity: 0.5;
     text-decoration: none;
     white-space: nowrap;
@@ -157,7 +157,7 @@ const fmtDate = (d: Date) =>
 
   .episode-meta {
     font-size: 13px;
-    color: #e5e7eb;
+    color: var(--fg);
     opacity: 0.5;
     margin: 4px 0 0 0;
   }
@@ -165,7 +165,7 @@ const fmtDate = (d: Date) =>
   .episode-summary {
     font-size: 14px;
     font-style: italic;
-    color: #e5e7eb;
+    color: var(--fg);
     opacity: 0.6;
     margin: 8px 0 0 0;
     line-height: 1.5;

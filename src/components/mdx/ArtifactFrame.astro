@@ -58,8 +58,8 @@ const captionText = label ? `Prototype · ${label} · ` : 'Prototype · ';
   .artifact-frame__iframe {
     display: block;
     width: 100%;
-    border: 1px solid rgba(255, 255, 255, 0.08);
-    background: #0a0a0a;
+    border: 1px solid var(--border);
+    background: var(--bg-elev);
     border-radius: 0;
   }
 
@@ -69,7 +69,7 @@ const captionText = label ? `Prototype · ${label} · ` : 'Prototype · ';
     font-size: 14px;
     font-style: italic;
     opacity: 0.5;
-    color: #e5e7eb;
+    color: var(--fg);
     font-family: var(--font-inter, Inter, sans-serif);
     line-height: 1.5;
   }
@@ -83,6 +83,6 @@ const captionText = label ? `Prototype · ${label} · ` : 'Prototype · ';
 
   .artifact-frame__link:hover {
     opacity: 1;
-    color: #ffffff;
+    color: var(--hi);
   }
 </style>

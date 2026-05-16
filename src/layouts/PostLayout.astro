@@ -67,7 +67,7 @@ const monthDayYear = new Intl.DateTimeFormat('en-US', {
     font-size: 32px;
     font-weight: 500;
     line-height: 1.2;
-    color: #ffffff;
+    color: var(--hi);
     margin: 0 0 12px 0;
     letter-spacing: -0.02em;
   }
@@ -75,7 +75,7 @@ const monthDayYear = new Intl.DateTimeFormat('en-US', {
   .post-meta {
     font-family: var(--font-inter, Inter, sans-serif);
     font-size: 14px;
-    color: #e5e7eb;
+    color: var(--fg);
     opacity: 0.5;
     margin: 0;
   }
@@ -84,13 +84,13 @@ const monthDayYear = new Intl.DateTimeFormat('en-US', {
     font-family: var(--font-inter, Inter, sans-serif);
     font-size: 16px;
     line-height: 1.75;
-    color: #e5e7eb;
+    color: var(--fg);
   }
 
   .post-body :global(h2) {
     font-size: 22px;
     font-weight: 500;
-    color: #ffffff;
+    color: var(--hi);
     margin-top: 48px;
     margin-bottom: 16px;
     letter-spacing: -0.01em;
@@ -99,7 +99,7 @@ const monthDayYear = new Intl.DateTimeFormat('en-US', {
   .post-body :global(h3) {
     font-size: 18px;
     font-weight: 500;
-    color: #ffffff;
+    color: var(--hi);
     margin-top: 32px;
     margin-bottom: 12px;
   }
@@ -110,7 +110,7 @@ const monthDayYear = new Intl.DateTimeFormat('en-US', {
   }
 
   .post-body :global(a) {
-    color: #e5e7eb;
+    color: var(--fg);
     text-decoration: underline;
     text-underline-offset: 3px;
     opacity: 0.8;
@@ -118,13 +118,13 @@ const monthDayYear = new Intl.DateTimeFormat('en-US', {
   }
 
   .post-body :global(a:hover) {
-    color: #ffffff;
+    color: var(--hi);
     opacity: 1;
   }
 
   .post-body :global(pre) {
     background: rgba(255, 255, 255, 0.05);
-    border: 1px solid rgba(255, 255, 255, 0.08);
+    border: 1px solid var(--border);
     padding: 20px;
     overflow-x: auto;
     font-size: 14px;
@@ -135,7 +135,7 @@ const monthDayYear = new Intl.DateTimeFormat('en-US', {
   .post-body :global(code) {
     font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
     font-size: 0.875em;
-    background: rgba(255, 255, 255, 0.08);
+    background: var(--border);
     padding: 2px 6px;
   }
 
@@ -146,10 +146,10 @@ const monthDayYear = new Intl.DateTimeFormat('en-US', {
   }
 
   .post-body :global(blockquote) {
-    border-left: 2px solid rgba(255, 255, 255, 0.2);
+    border-left: 2px solid var(--border-strong);
     margin: 24px 0;
     padding: 4px 20px;
-    color: #e5e7eb;
+    color: var(--fg);
     opacity: 0.7;
   }
 

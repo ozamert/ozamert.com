@@ -1,4 +1,36 @@
-/* ozamert.com — antfu.me-inspired dark minimal theme */
+/* ozamert.com — theme variables (dark default + light override) */
+
+:root {
+  --bg: #050505;
+  --bg-elev: #0a0a0a;
+  --fg: #e5e7eb;
+  --hi: #ffffff;
+  --border: rgba(255, 255, 255, 0.08);
+  --border-strong: rgba(255, 255, 255, 0.2);
+  --watermark: rgba(255, 255, 255, 0.06);
+  --selection-bg: rgba(255, 255, 255, 0.15);
+  --selection-fg: #ffffff;
+  --scrollbar: rgba(255, 255, 255, 0.1);
+  --scrollbar-hover: rgba(255, 255, 255, 0.2);
+  --dot-grid: rgba(255, 255, 255, 0.04);
+  color-scheme: dark;
+}
+
+:root[data-theme="light"] {
+  --bg: #fafafa;
+  --bg-elev: #f0f0f0;
+  --fg: #1a1a1a;
+  --hi: #000000;
+  --border: rgba(0, 0, 0, 0.1);
+  --border-strong: rgba(0, 0, 0, 0.25);
+  --watermark: rgba(0, 0, 0, 0.06);
+  --selection-bg: rgba(0, 0, 0, 0.12);
+  --selection-fg: #000000;
+  --scrollbar: rgba(0, 0, 0, 0.15);
+  --scrollbar-hover: rgba(0, 0, 0, 0.3);
+  --dot-grid: rgba(0, 0, 0, 0.05);
+  color-scheme: light;
+}
 
 /* ─── Reset & base ───────────────────────────────────────────────────────── */
 *,
@@ -10,8 +42,8 @@
 }
 
 html {
-  background-color: #050505;
-  color: #e5e7eb;
+  background-color: var(--bg);
+  color: var(--fg);
   font-family: var(--font-inter), system-ui, sans-serif;
   font-size: 16px;
   line-height: 1.6;
@@ -19,10 +51,12 @@ html {
   -moz-osx-font-smoothing: grayscale;
   border-radius: 0;
   scroll-behavior: smooth;
+  transition: background-color 200ms ease, color 200ms ease;
 }
 
 body {
-  color: #e5e7eb;
+  color: var(--fg);
+  background-color: var(--bg);
   min-height: 100vh;
   word-wrap: break-word;
   overflow-wrap: break-word;
@@ -52,7 +86,7 @@ h6 {
   font-family: var(--font-inter), system-ui, sans-serif;
   font-weight: 500;
   line-height: 1.2;
-  color: #e5e7eb;
+  color: var(--fg);
   border-radius: 0;
 }
 
@@ -76,7 +110,7 @@ a {
 }
 
 a:hover {
-  color: #ffffff;
+  color: var(--hi);
 }
 
 /* ─── Muted text ─────────────────────────────────────────────────────────── */
@@ -87,7 +121,7 @@ a:hover {
 /* ─── Borders ────────────────────────────────────────────────────────────── */
 hr {
   border: none;
-  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  border-top: 1px solid var(--border);
   margin: 2rem 0;
 }
 
@@ -103,15 +137,15 @@ img {
 code {
   font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
   font-size: 0.875em;
-  background-color: #0a0a0a;
-  border: 1px solid rgba(255, 255, 255, 0.08);
+  background-color: var(--bg-elev);
+  border: 1px solid var(--border);
   padding: 0.15em 0.4em;
   border-radius: 0;
 }
 
 pre {
-  background-color: #0a0a0a;
-  border: 1px solid rgba(255, 255, 255, 0.08);
+  background-color: var(--bg-elev);
+  border: 1px solid var(--border);
   padding: 1.25rem 1.5rem;
   overflow-x: auto;
   border-radius: 0;
@@ -129,7 +163,7 @@ pre > code {
 
 /* ─── Blockquote ─────────────────────────────────────────────────────────── */
 blockquote {
-  border-left: 2px solid rgba(255, 255, 255, 0.08);
+  border-left: 2px solid var(--border);
   padding-left: 1.25rem;
   margin: 1.5rem 0;
   opacity: 0.8;
@@ -145,7 +179,7 @@ table {
 th,
 td {
   padding: 0.5rem 1rem;
-  border: 1px solid rgba(255, 255, 255, 0.08);
+  border: 1px solid var(--border);
   text-align: left;
 }
 
@@ -171,9 +205,9 @@ textarea,
 select {
   font-family: var(--font-inter), system-ui, sans-serif;
   font-size: 16px;
-  background-color: #0a0a0a;
-  color: #e5e7eb;
-  border: 1px solid rgba(255, 255, 255, 0.08);
+  background-color: var(--bg-elev);
+  color: var(--fg);
+  border: 1px solid var(--border);
   border-radius: 0;
   padding: 0.5rem 0.75rem;
 }
@@ -181,13 +215,13 @@ select {
 input:focus,
 textarea:focus,
 select:focus {
-  outline: 1px solid rgba(255, 255, 255, 0.3);
+  outline: 1px solid var(--border-strong);
 }
 
 /* ─── Selection ──────────────────────────────────────────────────────────── */
 ::selection {
-  background: rgba(255, 255, 255, 0.15);
-  color: #ffffff;
+  background: var(--selection-bg);
+  color: var(--selection-fg);
 }
 
 /* ─── Scrollbar ──────────────────────────────────────────────────────────── */
@@ -201,18 +235,18 @@ select:focus {
 }
 
 ::-webkit-scrollbar-thumb {
-  background: rgba(255, 255, 255, 0.1);
+  background: var(--scrollbar);
   border-radius: 0;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: rgba(255, 255, 255, 0.2);
+  background: var(--scrollbar-hover);
 }
 
 /* Firefox scrollbar */
 * {
   scrollbar-width: thin;
-  scrollbar-color: rgba(255, 255, 255, 0.1) transparent;
+  scrollbar-color: var(--scrollbar) transparent;
 }
 
 /* ─── Accessibility: screen-reader only ──────────────────────────────────── */
@@ -254,6 +288,6 @@ b {
 
 /* ─── Dot grid background utility ───────────────────────────────────────── */
 .dot-grid-bg {
-  background-image: radial-gradient(circle, rgba(255, 255, 255, 0.04) 1px, transparent 1px);
+  background-image: radial-gradient(circle, var(--dot-grid) 1px, transparent 1px);
   background-size: 24px 24px;
 }
