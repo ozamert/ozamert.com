@@ -1,0 +1,177 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '../layouts/BaseLayout.astro';
+import PostList from '../components/PostList.astro';
+import TechChip from '../components/TechChip.astro';
+import SocialCluster from '../components/SocialCluster.astro';
+
+// Fetch all content collections
+const [dataEng, dataSci, mlEng, hobbyPosts, labNotes, podcastPosts] = await Promise.all([
+  getCollection('data-engineering'),
+  getCollection('data-science'),
+  getCollection('ml-engineering'),
+  getCollection('hobbies'),
+  getCollection('labNotes'),
+  getCollection('podcast'),
+]);
+
+const allPosts = [
+  ...dataEng.map((p) => ({
+    title: p.data.title,
+    date: p.data.date,
+    slug: `/data-engineering/${p.id}`,
+    readingTime: p.data.readingTime,
+  })),
+  ...dataSci.map((p) => ({
+    title: p.data.title,
+    date: p.data.date,
+    slug: `/data-science/${p.id}`,
+    readingTime: p.data.readingTime,
+  })),
+  ...mlEng.map((p) => ({
+    title: p.data.title,
+    date: p.data.date,
+    slug: `/ml-engineering/${p.id}`,
+    readingTime: p.data.readingTime,
+  })),
+  ...hobbyPosts.map((p) => ({
+    title: p.data.title,
+    date: p.data.date,
+    slug: `/${p.data.sub}/${p.id.replace(/^(travel|music|languages)\//, '')}`,
+    readingTime: p.data.readingTime,
+  })),
+  ...labNotes.map((p) => ({
+    title: p.data.title,
+    date: p.data.date,
+    slug: `/lab-notes/${p.id}`,
+    readingTime: undefined,
+  })),
+  ...podcastPosts.map((p) => ({
+    title: p.data.title,
+    date: p.data.date,
+    slug: `/podcast/${p.id}`,
+    readingTime: undefined,
+  })),
+]
+  .sort((a, b) => +new Date(b.date) - +new Date(a.date))
+  .slice(0, 12);
+---
+
+<BaseLayout
+  title="ozamert"
+  description="Personal blog by Mert Öztürk — data, ML, and creative side projects."
+>
+  <div class="dot-grid-bg home-main">
+    <!-- Name -->
+    <h1 class="name">Mert Öztürk</h1>
+
+    <!-- Bio -->
+    <div class="bio">
+      <p>Hey, I'm Mert. Data engineer and lifelong learner exploring data, ML, and creative side projects.</p>
+
+      <p>
+        Working on <TechChip label="ozamert.com" icon="🌐" /> · learning <TechChip label="MLOps" icon="⚙️" />
+      </p>
+
+      <p>
+        Daily stack:
+        <TechChip label="Python" icon="🐍" />
+        <TechChip label="DuckDB" icon="🦆" />
+        <TechChip label="dbt" icon="🔄" />
+        <TechChip label="Airflow" icon="🌀" />
+        <TechChip label="PyTorch" icon="🔥" />
+      </p>
+
+      <p>Creator of <TechChip label="this blog" icon="✏️" /></p>
+    </div>
+
+    <!-- About -->
+    <div class="about">
+      <p>
+        I spend most of my time building data pipelines and thinking about ML systems. Outside of work you'll find me cataloguing the world through a camera lens (<a href="/photos">photos</a>), chasing new cities (<a href="/travel">travel</a>), stumbling through Spanish, German, and Japanese (<a href="/languages">languages</a>), or picking out chord changes on guitar (<a href="/music">music</a>).
+      </p>
+      <p>
+        This site is where I think out loud — tutorials, build logs, bug diaries, and the occasional hobby ramble.
+      </p>
+    </div>
+
+    <!-- Recent posts -->
+    {allPosts.length > 0 && (
+      <section class="posts-section">
+        <h2 class="section-heading">Recent posts</h2>
+        <PostList posts={allPosts} />
+      </section>
+    )}
+
+    <!-- Social cluster -->
+    <SocialCluster />
+  </div>
+</BaseLayout>
+
+<style>
+  .home-main {
+    width: 100%;
+    padding-bottom: 48px;
+  }
+
+  .name {
+    font-family: var(--font-inter, Inter, sans-serif);
+    font-size: 32px;
+    font-weight: 500;
+    color: #e5e7eb;
+    margin-top: 0;
+    margin-bottom: 24px;
+    line-height: 1.2;
+  }
+
+  .bio {
+    margin-bottom: 24px;
+  }
+
+  .bio p {
+    font-family: var(--font-inter, Inter, sans-serif);
+    font-size: 16px;
+    line-height: 1.6;
+    color: #e5e7eb;
+    margin-bottom: 8px;
+  }
+
+  .about {
+    margin-bottom: 0;
+  }
+
+  .about p {
+    font-family: var(--font-inter, Inter, sans-serif);
+    font-size: 16px;
+    line-height: 1.7;
+    color: #e5e7eb;
+    opacity: 0.75;
+    margin-bottom: 12px;
+  }
+
+  .about a {
+    color: #e5e7eb;
+    opacity: 1;
+    text-decoration: underline;
+    text-underline-offset: 2px;
+    text-decoration-color: rgba(255, 255, 255, 0.2);
+  }
+
+  .about a:hover {
+    color: #ffffff;
+    text-decoration-color: rgba(255, 255, 255, 0.5);
+  }
+
+  .posts-section {
+    margin-top: 64px;
+    margin-bottom: 0;
+  }
+
+  .section-heading {
+    font-family: var(--font-inter, Inter, sans-serif);
+    font-size: 24px;
+    font-weight: 500;
+    color: #e5e7eb;
+    margin-bottom: 32px;
+  }
+</style>

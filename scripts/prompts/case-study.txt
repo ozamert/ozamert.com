@@ -1,0 +1,13 @@
+Turn this GitHub repo into a blog case study in MDX format.
+
+Include:
+- Problem statement
+- Constraints
+- Architecture diagram in Mermaid
+- Dataset/inputs used
+- Key metrics or results
+- Lessons learned
+- What I'd do differently next time
+- MDX front-matter (category: projects)
+
+Repo: [REPO]

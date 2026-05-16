@@ -1,0 +1,65 @@
+---
+/**
+ * ImageFig.astro — figure + figcaption wrapper for MDX posts
+ *
+ * @usage
+ * ```mdx
+ * import { ImageFig } from '../components/mdx/index.ts';
+ *
+ * <ImageFig
+ *   src="/images/my-screenshot.png"
+ *   alt="Terminal showing Docker build output"
+ *   caption="Docker build completing in 12 seconds on M2."
+ * />
+ *
+ * <!-- Optional fixed width -->
+ * <ImageFig src="/images/diagram.png" alt="Architecture diagram" width={720} />
+ * ```
+ */
+
+interface Props {
+  src: string;
+  alt: string;
+  caption?: string;
+  width?: number;
+}
+
+const { src, alt, caption, width } = Astro.props;
+---
+
+<figure class="image-fig">
+  <img
+    src={src}
+    alt={alt}
+    class="image-fig__img"
+    width={width}
+    loading="lazy"
+    decoding="async"
+  />
+  {caption && <figcaption class="image-fig__caption">{caption}</figcaption>}
+</figure>
+
+<style>
+  .image-fig {
+    margin: 32px 0;
+    padding: 0;
+  }
+
+  .image-fig__img {
+    display: block;
+    max-width: 100%;
+    background: #0a0a0a;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 0;
+  }
+
+  .image-fig__caption {
+    margin-top: 12px;
+    font-size: 14px;
+    font-style: italic;
+    opacity: 0.5;
+    color: #e5e7eb;
+    font-family: var(--font-inter, Inter, sans-serif);
+    line-height: 1.5;
+  }
+</style>

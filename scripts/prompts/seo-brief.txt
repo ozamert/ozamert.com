@@ -1,0 +1,10 @@
+Create an SEO brief for the post titled "[TITLE]" targeting [KEYWORD] for beginners.
+
+Include:
+- Searcher intent
+- 5–7 H2s
+- FAQs
+- Related long-tail keywords
+- Internal links to suggest
+- External authoritative sources to cite
+- 150–160 char meta description

@@ -1,0 +1,114 @@
+---
+/**
+ * VideoEmbed.astro — responsive iframe video embed for MDX posts
+ *
+ * Supports YouTube, Loom, and any arbitrary iframe URL.
+ *
+ * @usage
+ * ```mdx
+ * import { VideoEmbed } from '../components/mdx/index.ts';
+ *
+ * <!-- YouTube (full URL or short youtu.be) -->
+ * <VideoEmbed
+ *   src="https://www.youtube.com/watch?v=dQw4w9WgXcQ"
+ *   title="Demo walkthrough"
+ * />
+ *
+ * <!-- Loom -->
+ * <VideoEmbed src="https://www.loom.com/share/abc123" title="Screen recording" />
+ *
+ * <!-- Raw iframe -->
+ * <VideoEmbed src="https://example.com/embed/foo" aspectRatio="4/3" />
+ * ```
+ */
+
+interface Props {
+  src: string;
+  title?: string;
+  aspectRatio?: string;
+}
+
+const { src, title, aspectRatio = '16/9' } = Astro.props;
+
+function resolveEmbedUrl(rawSrc: string): string {
+  // YouTube: full watch URL
+  const ytWatch = rawSrc.match(
+    /(?:youtube\.com\/watch\?(?:.*&)?v=|youtu\.be\/)([A-Za-z0-9_-]{11})/
+  );
+  if (ytWatch) {
+    return `https://www.youtube-nocookie.com/embed/${ytWatch[1]}?rel=0`;
+  }
+
+  // YouTube: already an embed URL
+  if (rawSrc.includes('youtube.com/embed/') || rawSrc.includes('youtube-nocookie.com/embed/')) {
+    return rawSrc;
+  }
+
+  // Loom share URL → embed URL
+  const loomShare = rawSrc.match(/loom\.com\/share\/([A-Za-z0-9]+)/);
+  if (loomShare) {
+    return `https://www.loom.com/embed/${loomShare[1]}`;
+  }
+
+  // Loom already an embed URL
+  if (rawSrc.includes('loom.com/embed/')) {
+    return rawSrc;
+  }
+
+  // Fallback: use as-is
+  return rawSrc;
+}
+
+const embedUrl = resolveEmbedUrl(src);
+---
+
+<div class="video-embed">
+  <div class="video-embed__wrapper" style={`aspect-ratio: ${aspectRatio};`}>
+    <iframe
+      src={embedUrl}
+      title={title ?? 'Embedded video'}
+      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+      allowfullscreen
+      loading="lazy"
+      class="video-embed__iframe"
+    ></iframe>
+  </div>
+  {
+    title && (
+      <p class="video-embed__caption">{title}</p>
+    )
+  }
+</div>
+
+<style>
+  .video-embed {
+    margin: 32px 0;
+  }
+
+  .video-embed__wrapper {
+    position: relative;
+    width: 100%;
+    overflow: hidden;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    background: #0a0a0a;
+  }
+
+  .video-embed__iframe {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    border: 0;
+  }
+
+  .video-embed__caption {
+    margin-top: 12px;
+    margin-bottom: 0;
+    font-size: 14px;
+    font-style: italic;
+    opacity: 0.5;
+    color: #e5e7eb;
+    font-family: var(--font-inter, Inter, sans-serif);
+    line-height: 1.5;
+  }
+</style>

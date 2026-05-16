@@ -1,0 +1,59 @@
+---
+import PostRow from './PostRow.astro';
+
+interface PostItem {
+  title: string;
+  date: Date;
+  slug: string;
+  readingTime?: number;
+  external?: string;
+}
+
+interface Props {
+  posts: PostItem[];
+}
+
+const { posts } = Astro.props;
+
+// Sort by date descending
+const sorted = [...posts].sort((a, b) => b.date.getTime() - a.date.getTime());
+
+// Group by year
+const byYear = new Map<number, PostItem[]>();
+for (const post of sorted) {
+  const year = post.date.getFullYear();
+  if (!byYear.has(year)) byYear.set(year, []);
+  byYear.get(year)!.push(post);
+}
+
+// Years in descending order
+const years = [...byYear.keys()].sort((a, b) => b - a);
+---
+
+<div class="post-list">
+  {years.map((year, yearIdx) => (
+    <div class="year-group" style={yearIdx > 0 ? 'margin-top: 64px;' : ''}>
+      {byYear.get(year)!.map((post, i) => (
+        <PostRow
+          title={post.title}
+          date={post.date}
+          slug={post.slug}
+          readingTime={post.readingTime}
+          external={post.external}
+          yearLabel={i === 0 ? year : undefined}
+        />
+      ))}
+    </div>
+  ))}
+</div>
+
+<style>
+  .post-list {
+    width: 100%;
+  }
+
+  .year-group {
+    position: relative;
+    width: 100%;
+  }
+</style>

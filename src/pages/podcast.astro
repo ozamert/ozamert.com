@@ -1,0 +1,173 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '../layouts/BaseLayout.astro';
+
+const all = await getCollection('podcast');
+const listening = all
+  .filter((e) => e.data.type === 'listening')
+  .sort((a, b) => b.data.date.getTime() - a.data.date.getTime());
+const own = all
+  .filter((e) => e.data.type === 'own')
+  .sort((a, b) => b.data.date.getTime() - a.data.date.getTime());
+
+const fmtDate = (d: Date) =>
+  new Intl.DateTimeFormat('en-US', { month: 'short', day: 'numeric', year: 'numeric' }).format(d);
+---
+
+<BaseLayout
+  title="Podcast"
+  description="Things Mert listens to and his own podcast episodes."
+>
+  <h1 class="page-title">Podcast</h1>
+  <p class="page-subtitle">Things I listen to + my own episodes</p>
+
+  <section class="section">
+    <h2 class="section-title">My Own Episodes</h2>
+    {own.length === 0 ? (
+      <p class="empty">No episodes yet — coming soon.</p>
+    ) : (
+      <ul class="episode-list">
+        {own.map((ep) => (
+          <li class="episode-item">
+            <div class="episode-title-row">
+              <span class="episode-title">{ep.data.title}</span>
+              {ep.data.listenUrl && (
+                <a href={ep.data.listenUrl} target="_blank" rel="noopener noreferrer" class="listen-link">
+                  ↗ listen
+                </a>
+              )}
+            </div>
+            <p class="episode-meta">
+              {ep.data.episode && <span>{ep.data.episode} · </span>}
+              {fmtDate(ep.data.date)}
+            </p>
+            {ep.data.summary && <p class="episode-summary">{ep.data.summary}</p>}
+          </li>
+        ))}
+      </ul>
+    )}
+  </section>
+
+  <section class="section">
+    <h2 class="section-title">Listening</h2>
+    {listening.length === 0 ? (
+      <p class="empty">No episodes logged yet.</p>
+    ) : (
+      <ul class="episode-list">
+        {listening.map((ep) => (
+          <li class="episode-item">
+            <div class="episode-title-row">
+              <span class="episode-title">{ep.data.title}</span>
+              {ep.data.listenUrl && (
+                <a href={ep.data.listenUrl} target="_blank" rel="noopener noreferrer" class="listen-link">
+                  ↗ listen
+                </a>
+              )}
+            </div>
+            <p class="episode-meta">
+              {ep.data.show && <span>{ep.data.show}</span>}
+              {ep.data.host && <span> · {ep.data.host}</span>}
+              <span> · {fmtDate(ep.data.date)}</span>
+            </p>
+            {ep.data.summary && <p class="episode-summary">{ep.data.summary}</p>}
+          </li>
+        ))}
+      </ul>
+    )}
+  </section>
+</BaseLayout>
+
+<style>
+  .page-title {
+    font-size: 32px;
+    font-weight: 500;
+    color: #ffffff;
+    margin: 0 0 8px 0;
+    letter-spacing: -0.02em;
+  }
+
+  .page-subtitle {
+    font-size: 16px;
+    font-style: italic;
+    color: #e5e7eb;
+    opacity: 0.5;
+    margin: 0 0 56px 0;
+  }
+
+  .section {
+    margin-bottom: 56px;
+  }
+
+  .section-title {
+    font-size: 24px;
+    font-weight: 500;
+    color: #e5e7eb;
+    margin: 0 0 24px 0;
+    letter-spacing: -0.01em;
+  }
+
+  .empty {
+    font-size: 14px;
+    color: #e5e7eb;
+    opacity: 0.4;
+    font-style: italic;
+  }
+
+  .episode-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+
+  .episode-item {
+    padding: 16px 0;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+  }
+
+  .episode-item:last-child {
+    border-bottom: none;
+  }
+
+  .episode-title-row {
+    display: flex;
+    align-items: baseline;
+    gap: 12px;
+    flex-wrap: wrap;
+  }
+
+  .episode-title {
+    font-size: 16px;
+    font-weight: 500;
+    color: #e5e7eb;
+    line-height: 1.4;
+  }
+
+  .listen-link {
+    font-size: 13px;
+    color: #e5e7eb;
+    opacity: 0.5;
+    text-decoration: none;
+    white-space: nowrap;
+    transition: opacity 0.15s ease;
+  }
+
+  .listen-link:hover {
+    opacity: 1;
+  }
+
+  .episode-meta {
+    font-size: 13px;
+    color: #e5e7eb;
+    opacity: 0.5;
+    margin: 4px 0 0 0;
+  }
+
+  .episode-summary {
+    font-size: 14px;
+    font-style: italic;
+    color: #e5e7eb;
+    opacity: 0.6;
+    margin: 8px 0 0 0;
+    line-height: 1.5;
+  }
+</style>

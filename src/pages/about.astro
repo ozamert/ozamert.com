@@ -1,0 +1,209 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import TechChip from '../components/TechChip.astro';
+
+const stack = {
+  Languages: ['Python', 'SQL', 'TypeScript'],
+  Data: ['DuckDB', 'Snowflake', 'dbt', 'Airflow'],
+  ML: ['PyTorch', 'scikit-learn', 'Hugging Face'],
+  Frontend: ['Astro', 'MDX', 'Tailwind'],
+  Editor: ['VS Code', 'Cursor'],
+};
+---
+
+<BaseLayout
+  title="About"
+  description="Mert Öztürk — data engineer, learner, traveler. Building things and learning out loud."
+>
+  <article class="about">
+    <h1 class="page-title">About</h1>
+
+    <section class="section bio">
+      <p>
+        Hi, I'm Mert Öztürk. Data engineer based in Istanbul. I love building things,
+        learning languages, and traveling slowly. This site is where I share what I'm
+        learning.
+      </p>
+    </section>
+
+    <section class="section">
+      <h2 class="section-title">Currently</h2>
+      <ul class="list">
+        <li><span class="item-label">Working on:</span> ozamert.com</li>
+        <li><span class="item-label">Learning:</span> MLOps + fine-tuning Llama 3</li>
+        <li><span class="item-label">Reading:</span> The Pragmatic Programmer</li>
+        <li><span class="item-label">Practicing:</span> Spanish A2, German B1, guitar</li>
+      </ul>
+    </section>
+
+    <section class="section">
+      <h2 class="section-title">Stack</h2>
+      {Object.entries(stack).map(([category, items]) => (
+        <div class="stack-row">
+          <span class="stack-category">{category}</span>
+          <div class="stack-chips">
+            {items.map((item) => <TechChip label={item} />)}
+          </div>
+        </div>
+      ))}
+    </section>
+
+    <section class="section">
+      <h2 class="section-title">Contact</h2>
+      <ul class="contact-list">
+        <li>
+          <span class="contact-label">Email</span>
+          <a href="mailto:hello@ozamert.com">hello@ozamert.com</a>
+        </li>
+        <li>
+          <span class="contact-label">GitHub</span>
+          <a href="https://github.com/ozamert" target="_blank" rel="noopener noreferrer">
+            @ozamert
+          </a>
+        </li>
+        <li>
+          <span class="contact-label">X</span>
+          <a href="https://x.com/ozamert" target="_blank" rel="noopener noreferrer">
+            @ozamert
+          </a>
+        </li>
+        <li>
+          <span class="contact-label">LinkedIn</span>
+          <a href="https://linkedin.com/in/mertozturk" target="_blank" rel="noopener noreferrer">
+            linkedin.com/in/mertozturk
+          </a>
+        </li>
+      </ul>
+    </section>
+  </article>
+</BaseLayout>
+
+<style>
+  .about {
+    width: 100%;
+  }
+
+  .page-title {
+    font-size: 32px;
+    font-weight: 500;
+    color: #ffffff;
+    margin: 0 0 48px 0;
+    letter-spacing: -0.02em;
+  }
+
+  .section {
+    margin-bottom: 48px;
+  }
+
+  .bio p {
+    font-size: 16px;
+    line-height: 1.75;
+    color: #e5e7eb;
+    opacity: 0.8;
+    margin: 0;
+  }
+
+  .section-title {
+    font-size: 13px;
+    font-weight: 500;
+    color: #e5e7eb;
+    opacity: 0.4;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    margin: 0 0 20px 0;
+  }
+
+  .list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+
+  .list li {
+    font-size: 15px;
+    line-height: 1.6;
+    color: #e5e7eb;
+    opacity: 0.75;
+    padding: 8px 0;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    display: flex;
+    gap: 8px;
+  }
+
+  .list li:last-child {
+    border-bottom: none;
+  }
+
+  .item-label {
+    color: #e5e7eb;
+    opacity: 0.5;
+    min-width: 100px;
+    flex-shrink: 0;
+  }
+
+  .stack-row {
+    display: flex;
+    align-items: flex-start;
+    gap: 16px;
+    padding: 10px 0;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+  }
+
+  .stack-row:last-child {
+    border-bottom: none;
+  }
+
+  .stack-category {
+    font-size: 13px;
+    color: #e5e7eb;
+    opacity: 0.5;
+    min-width: 80px;
+    flex-shrink: 0;
+    padding-top: 4px;
+  }
+
+  .stack-chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+  }
+
+  .contact-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+
+  .contact-list li {
+    display: flex;
+    align-items: baseline;
+    gap: 16px;
+    padding: 10px 0;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    font-size: 15px;
+  }
+
+  .contact-list li:last-child {
+    border-bottom: none;
+  }
+
+  .contact-label {
+    font-size: 13px;
+    color: #e5e7eb;
+    opacity: 0.4;
+    min-width: 72px;
+    flex-shrink: 0;
+  }
+
+  .contact-list a {
+    color: #e5e7eb;
+    text-decoration: none;
+    opacity: 0.75;
+    transition: opacity 0.15s ease, color 0.15s ease;
+  }
+
+  .contact-list a:hover {
+    opacity: 1;
+    color: #ffffff;
+  }
+</style>

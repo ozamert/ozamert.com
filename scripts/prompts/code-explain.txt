@@ -1,0 +1,8 @@
+Explain this code to a motivated beginner.
+
+1. Annotate line-by-line (inline comments)
+2. Extract 5 reusable snippets with short explanations
+3. Propose 3 tests to verify correctness
+
+Code:
+[CODE]

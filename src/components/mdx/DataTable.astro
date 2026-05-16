@@ -1,0 +1,169 @@
+---
+/**
+ * DataTable.astro — styled data table for MDX posts
+ *
+ * Two usage modes:
+ *
+ * 1) Slot mode — wrap a markdown table or raw <table>:
+ * ```mdx
+ * import { DataTable } from '../components/mdx/index.ts';
+ *
+ * <DataTable>
+ *   | Tool      | Language | Stars |
+ *   |-----------|----------|------:|
+ *   | DuckDB    | C++      | 18 k  |
+ *   | Polars    | Rust     | 26 k  |
+ * </DataTable>
+ * ```
+ *
+ * 2) Props mode — pass headers + rows programmatically:
+ * ```mdx
+ * <DataTable
+ *   headers={['Tool', 'Language', 'Stars']}
+ *   rows={[['DuckDB', 'C++', '18 k'], ['Polars', 'Rust', '26 k']]}
+ *   align={['left', 'left', 'right']}
+ * />
+ * ```
+ */
+
+type Align = 'left' | 'right' | 'center';
+
+interface Props {
+  headers?: string[];
+  rows?: (string | number)[][];
+  align?: Align[];
+}
+
+const { headers, rows, align } = Astro.props;
+
+const useProps = headers !== undefined && rows !== undefined;
+
+function cellAlign(index: number): Align {
+  return align?.[index] ?? 'left';
+}
+
+function isNumeric(val: string | number): boolean {
+  if (typeof val === 'number') return true;
+  return /^-?[\d,._]+%?$/.test(String(val).trim());
+}
+---
+
+<div class="data-table-wrap">
+  {
+    useProps ? (
+      <table class="data-table">
+        <thead>
+          <tr>
+            {headers!.map((h, i) => (
+              <th style={`text-align: ${cellAlign(i)};`}>{h}</th>
+            ))}
+          </tr>
+        </thead>
+        <tbody>
+          {rows!.map((row) => (
+            <tr>
+              {row.map((cell, i) => {
+                const numeric = isNumeric(cell);
+                return (
+                  <td
+                    style={`text-align: ${cellAlign(i)}; ${numeric ? 'font-family: ui-monospace, SFMono-Regular, Menlo, monospace;' : ''}`}
+                  >
+                    {cell}
+                  </td>
+                );
+              })}
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    ) : (
+      <div class="data-table-slot">
+        <slot />
+      </div>
+    )
+  }
+</div>
+
+<style>
+  .data-table-wrap {
+    margin: 24px 0;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  /* Props-mode table */
+  .data-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-family: var(--font-inter, Inter, sans-serif);
+    font-size: 15px;
+    color: #e5e7eb;
+  }
+
+  .data-table thead tr {
+    border-top: 1px solid rgba(255, 255, 255, 0.12);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.12);
+  }
+
+  .data-table th {
+    padding: 8px 16px;
+    font-size: 14px;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    opacity: 0.5;
+    color: #e5e7eb;
+  }
+
+  .data-table td {
+    padding: 8px 16px;
+    border: none;
+    color: #e5e7eb;
+  }
+
+  .data-table tbody tr:last-child {
+    border-bottom: 1px solid rgba(255, 255, 255, 0.12);
+  }
+
+  /* Slot-mode: style any <table> injected via markdown/MDX */
+  .data-table-slot :global(table) {
+    width: 100%;
+    border-collapse: collapse;
+    font-family: var(--font-inter, Inter, sans-serif);
+    font-size: 15px;
+    color: #e5e7eb;
+  }
+
+  .data-table-slot :global(thead tr) {
+    border-top: 1px solid rgba(255, 255, 255, 0.12);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.12);
+  }
+
+  .data-table-slot :global(th) {
+    padding: 8px 16px;
+    font-size: 14px;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    opacity: 0.5;
+    color: #e5e7eb;
+    text-align: left;
+  }
+
+  .data-table-slot :global(td) {
+    padding: 8px 16px;
+    border: none;
+    color: #e5e7eb;
+  }
+
+  .data-table-slot :global(tbody tr:last-child) {
+    border-bottom: 1px solid rgba(255, 255, 255, 0.12);
+  }
+
+  /* Right-aligned columns from markdown pipe tables */
+  .data-table-slot :global(td[align='right']),
+  .data-table-slot :global(th[align='right']) {
+    text-align: right;
+    font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  }
+</style>

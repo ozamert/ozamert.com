@@ -1,0 +1,41 @@
+---
+interface Props {
+  label: string;
+  icon?: string;
+  color?: string;
+}
+
+const { label, icon, color } = Astro.props;
+---
+
+<span class="chip" style={color ? `--chip-accent: ${color};` : ''}>
+  {icon && <span class="chip-icon">{icon}</span>}
+  <span class="chip-label">{label}</span>
+</span>
+
+<style>
+  .chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    background: rgba(255, 255, 255, 0.04);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    padding: 2px 8px;
+    border-radius: 3px;
+    font-family: var(--font-inter, Inter, sans-serif);
+    font-size: 14px;
+    color: #e5e7eb;
+    vertical-align: middle;
+    margin: 0 2px;
+    line-height: 1.5;
+  }
+
+  .chip-icon {
+    font-size: 13px;
+    line-height: 1;
+  }
+
+  .chip-label {
+    white-space: nowrap;
+  }
+</style>

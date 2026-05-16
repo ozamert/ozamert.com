@@ -1,0 +1,5 @@
+You are my senior mentor. Generate 25 blog post ideas documenting a beginner → intermediate path for [TRACK].
+
+Constraints: each idea must be small, reproducible in 1–3 hours, with a specific dataset/tool/version.
+
+Output a markdown table with columns: Title | One-sentence Goal | Key Tools | Estimated Time | Difficulty (1–5) | Prereqs

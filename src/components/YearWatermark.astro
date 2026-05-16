@@ -1,0 +1,27 @@
+---
+interface Props {
+  year: number;
+}
+
+const { year } = Astro.props;
+---
+
+<span class="watermark" aria-hidden="true">{year}</span>
+
+<style>
+  .watermark {
+    position: absolute;
+    top: -32px;
+    left: -48px;
+    font-family: var(--font-inter, Inter, sans-serif);
+    font-size: 128px;
+    font-weight: 700;
+    color: rgba(255, 255, 255, 0.06);
+    letter-spacing: -0.04em;
+    line-height: 0.85;
+    pointer-events: none;
+    user-select: none;
+    z-index: -1;
+    white-space: nowrap;
+  }
+</style>

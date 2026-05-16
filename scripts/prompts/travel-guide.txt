@@ -1,0 +1,10 @@
+Design a 3-day travel mini-guide to [CITY] on a [BUDGET] budget with theme: [THEME].
+
+Include:
+- Daily routes (morning / afternoon / evening)
+- 3 food spots with price range
+- 2 cultural notes
+- Packing mini-checklist
+- 60-second video script hook
+
+Format as a complete hobby post MDX file.

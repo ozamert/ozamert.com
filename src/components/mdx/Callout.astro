@@ -1,0 +1,72 @@
+---
+/**
+ * Callout.astro — inline callout block for MDX posts
+ *
+ * @usage
+ * ```mdx
+ * import { Callout } from '../components/mdx/index.ts';
+ *
+ * <Callout type="note">Plain info goes here.</Callout>
+ * <Callout type="gotcha" title="Watch out">Custom title overrides the label.</Callout>
+ * <Callout type="tip">Pro tip body text.</Callout>
+ * ```
+ */
+
+export type CalloutType = 'note' | 'gotcha' | 'tip';
+
+interface Props {
+  type?: CalloutType;
+  title?: string;
+}
+
+const { type = 'note', title } = Astro.props;
+
+const labels: Record<CalloutType, string> = {
+  note: 'NOTE',
+  gotcha: 'GOTCHA',
+  tip: 'PRO TIP',
+};
+
+const label = title ?? labels[type];
+---
+
+<aside class={`callout callout--${type}`}>
+  <span class="callout__label">{label}</span>
+  <div class="callout__body">
+    <slot />
+  </div>
+</aside>
+
+<style>
+  .callout {
+    margin: 24px 0;
+    padding: 12px 20px;
+    border-left: 2px solid rgba(255, 255, 255, 0.3);
+    font-family: var(--font-inter, Inter, sans-serif);
+  }
+
+  .callout__label {
+    display: block;
+    font-size: 12px;
+    font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    opacity: 0.5;
+    margin-bottom: 6px;
+    color: #e5e7eb;
+  }
+
+  .callout__body {
+    font-size: 15px;
+    line-height: 1.65;
+    color: #e5e7eb;
+  }
+
+  /* Preserve prose margins inside the slot without extra gap */
+  .callout__body :global(p:first-child) {
+    margin-top: 0;
+  }
+  .callout__body :global(p:last-child) {
+    margin-bottom: 0;
+  }
+</style>

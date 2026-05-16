@@ -1,0 +1,88 @@
+---
+/**
+ * ArtifactFrame.astro — sandboxed iframe for interactive HTML demos/prototypes
+ *
+ * @usage
+ * ```mdx
+ * import { ArtifactFrame } from '../components/mdx/index.ts';
+ *
+ * <ArtifactFrame
+ *   src="/demos/etl-visualizer.html"
+ *   height={500}
+ *   label="ETL Visualizer"
+ * />
+ *
+ * <!-- Minimal (no label) -->
+ * <ArtifactFrame src="/demos/chart-demo.html" />
+ * ```
+ */
+
+interface Props {
+  src: string;
+  height?: number;
+  label?: string;
+}
+
+const { src, height = 600, label } = Astro.props;
+
+const captionText = label ? `Prototype · ${label} · ` : 'Prototype · ';
+---
+
+<div class="artifact-frame">
+  <iframe
+    src={src}
+    height={height}
+    class="artifact-frame__iframe"
+    sandbox="allow-scripts allow-same-origin allow-forms"
+    loading="lazy"
+    title={label ?? 'Interactive prototype'}
+  ></iframe>
+  <p class="artifact-frame__caption">
+    {captionText}
+    <a
+      href={src}
+      target="_blank"
+      rel="noopener noreferrer"
+      class="artifact-frame__link"
+    >
+      open in new tab&nbsp;↗
+    </a>
+  </p>
+</div>
+
+<style>
+  .artifact-frame {
+    margin: 32px 0;
+  }
+
+  .artifact-frame__iframe {
+    display: block;
+    width: 100%;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    background: #0a0a0a;
+    border-radius: 0;
+  }
+
+  .artifact-frame__caption {
+    margin-top: 12px;
+    margin-bottom: 0;
+    font-size: 14px;
+    font-style: italic;
+    opacity: 0.5;
+    color: #e5e7eb;
+    font-family: var(--font-inter, Inter, sans-serif);
+    line-height: 1.5;
+  }
+
+  .artifact-frame__link {
+    color: inherit;
+    text-decoration: underline;
+    text-underline-offset: 3px;
+    transition: opacity 0.15s ease;
+  }
+
+  .artifact-frame__link:hover {
+    opacity: 1;
+    color: #ffffff;
+  }
+</style>

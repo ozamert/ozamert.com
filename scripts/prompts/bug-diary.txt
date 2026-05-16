@@ -1,0 +1,11 @@
+I got this error in [ENV]:
+
+[ERROR]
+
+Write a Bug Diary post (≤600 words) with:
+1. Root cause hypotheses (ranked by likelihood)
+2. Minimal reproducible example
+3. Three fixes ordered safest → most invasive
+4. MDX front-matter (category: lab-notes, tags include the error code and tool)
+
+Format as a complete MDX file ready to save.

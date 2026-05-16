@@ -1,0 +1,126 @@
+---
+import { getCollection, render } from 'astro:content';
+import PostLayout from '../layouts/PostLayout.astro';
+
+export async function getStaticPaths() {
+  const [
+    dataEngineeringPosts,
+    dataSciencePosts,
+    mlEngineeringPosts,
+    hobbyPosts,
+    podcastPosts,
+    photoEntries,
+    labNoteEntries,
+    projectEntries,
+  ] = await Promise.all([
+    getCollection('data-engineering'),
+    getCollection('data-science'),
+    getCollection('ml-engineering'),
+    getCollection('hobbies'),
+    getCollection('podcast'),
+    getCollection('photos'),
+    getCollection('labNotes'),
+    getCollection('projects'),
+  ]);
+
+  const dataEngineeringPaths = dataEngineeringPosts.map((entry) => ({
+    params: { slug: `data-engineering/${entry.id}` },
+    props: { entry, collection: 'data-engineering' as const },
+  }));
+
+  const dataSciencePaths = dataSciencePosts.map((entry) => ({
+    params: { slug: `data-science/${entry.id}` },
+    props: { entry, collection: 'data-science' as const },
+  }));
+
+  const mlEngineeringPaths = mlEngineeringPosts.map((entry) => ({
+    params: { slug: `ml-engineering/${entry.id}` },
+    props: { entry, collection: 'ml-engineering' as const },
+  }));
+
+  // Hobbies: route by sub-category /music/{slug}, /travel/{slug}, /languages/{slug}
+  // entry.id includes the subfolder prefix (e.g. "music/guitar-20-min-routine"),
+  // so strip it to avoid double segments like /music/music/guitar-20-min-routine
+  const hobbyPaths = hobbyPosts.map((entry) => {
+    const bareId = entry.id.replace(/^(travel|music|languages)\//, '');
+    return {
+      params: { slug: `${entry.data.sub}/${bareId}` },
+      props: { entry, collection: 'hobbies' as const },
+    };
+  });
+
+  const podcastPaths = podcastPosts.map((entry) => ({
+    params: { slug: `podcast/${entry.id}` },
+    props: { entry, collection: 'podcast' as const },
+  }));
+
+  const photoPaths = photoEntries.map((entry) => ({
+    params: { slug: `photos/${entry.id}` },
+    props: { entry, collection: 'photos' as const },
+  }));
+
+  const labPaths = labNoteEntries.map((entry) => ({
+    params: { slug: `lab-notes/${entry.id}` },
+    props: { entry, collection: 'labNotes' as const },
+  }));
+
+  const projectPaths = projectEntries.map((entry) => ({
+    params: { slug: `projects/${entry.id}` },
+    props: { entry, collection: 'projects' as const },
+  }));
+
+  return [
+    ...dataEngineeringPaths,
+    ...dataSciencePaths,
+    ...mlEngineeringPaths,
+    ...hobbyPaths,
+    ...podcastPaths,
+    ...photoPaths,
+    ...labPaths,
+    ...projectPaths,
+  ];
+}
+
+const { entry } = Astro.props;
+
+// Render the MDX/MD content
+const { Content } = await render(entry);
+
+// Pull shared fields; each collection has slightly different data shape
+const title = entry.data.title;
+const date: Date = entry.data.date;
+
+// readingTime only exists on some posts
+const readingTime =
+  'readingTime' in entry.data && typeof entry.data.readingTime === 'number'
+    ? entry.data.readingTime
+    : undefined;
+
+// cover can be an image object from astro:assets or a plain string path
+const coverRaw =
+  'cover' in entry.data && entry.data.cover != null ? entry.data.cover : undefined;
+const cover =
+  coverRaw != null
+    ? typeof coverRaw === 'string'
+      ? coverRaw
+      : (coverRaw as { src: string }).src
+    : undefined;
+
+// description / summary fields vary by collection
+const description =
+  'summary' in entry.data && typeof entry.data.summary === 'string'
+    ? entry.data.summary
+    : 'impact' in entry.data && typeof entry.data.impact === 'string'
+      ? entry.data.impact
+      : title;
+---
+
+<PostLayout
+  title={title}
+  date={date}
+  readingTime={readingTime}
+  cover={cover}
+  description={description}
+>
+  <Content />
+</PostLayout>

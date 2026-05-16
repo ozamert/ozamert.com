@@ -1,0 +1,162 @@
+---
+/**
+ * CodeBlock.astro — styled code block with optional filename header and copy button
+ *
+ * Wrap a raw <code> or use as a fenced code block replacement in MDX.
+ *
+ * @usage
+ * ```mdx
+ * import { CodeBlock } from '../components/mdx/index.ts';
+ *
+ * <CodeBlock filename="docker-compose.yml" lang="yaml">
+ * ```yaml
+ * version: '3.9'
+ * services:
+ *   db:
+ *     image: postgres:16
+ * ```
+ * </CodeBlock>
+ *
+ * <!-- No filename -->
+ * <CodeBlock lang="bash">
+ * npm run dev
+ * </CodeBlock>
+ * ```
+ */
+
+interface Props {
+  filename?: string;
+  lang?: string;
+}
+
+const { filename, lang } = Astro.props;
+---
+
+<div class="code-block">
+  {
+    filename && (
+      <div class="code-block__header">
+        <span class="code-block__filename">{filename}</span>
+        {lang && <span class="code-block__lang">{lang}</span>}
+      </div>
+    )
+  }
+  <div class="code-block__pre-wrap">
+    <pre class="code-block__pre"><code class="code-block__code"><slot /></code></pre>
+    <button
+      class="code-block__copy"
+      aria-label="Copy code to clipboard"
+      type="button"
+    >
+      Copy
+    </button>
+  </div>
+</div>
+
+<script>
+  // Scoped copy-button logic — runs once per island
+  document.querySelectorAll<HTMLElement>('.code-block__pre-wrap').forEach((wrap) => {
+    const btn = wrap.querySelector<HTMLButtonElement>('.code-block__copy');
+    const pre = wrap.querySelector<HTMLPreElement>('.code-block__pre');
+    if (!btn || !pre) return;
+
+    btn.addEventListener('click', async () => {
+      const text = pre.textContent ?? '';
+      try {
+        await navigator.clipboard.writeText(text);
+        btn.textContent = 'Copied!';
+        setTimeout(() => {
+          btn.textContent = 'Copy';
+        }, 2000);
+      } catch {
+        btn.textContent = 'Failed';
+        setTimeout(() => {
+          btn.textContent = 'Copy';
+        }, 2000);
+      }
+    });
+  });
+</script>
+
+<style>
+  .code-block {
+    margin: 24px 0;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    background: #0a0a0a;
+    font-family: var(--font-inter, Inter, sans-serif);
+  }
+
+  .code-block__header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 8px 16px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  }
+
+  .code-block__filename {
+    font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+    font-size: 13px;
+    color: #e5e7eb;
+    opacity: 0.5;
+  }
+
+  .code-block__lang {
+    font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+    font-size: 12px;
+    color: #e5e7eb;
+    opacity: 0.35;
+    text-transform: lowercase;
+  }
+
+  .code-block__pre-wrap {
+    position: relative;
+  }
+
+  .code-block__pre-wrap:hover .code-block__copy {
+    opacity: 1;
+  }
+
+  .code-block__pre {
+    margin: 0;
+    padding: 16px;
+    overflow: auto;
+    background: transparent;
+    border-radius: 0;
+  }
+
+  .code-block__code {
+    font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+    font-size: 14px;
+    line-height: 1.6;
+    color: #e5e7eb;
+    background: transparent;
+  }
+
+  .code-block__copy {
+    position: absolute;
+    top: 10px;
+    right: 12px;
+    padding: 3px 10px;
+    font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+    font-size: 12px;
+    color: #e5e7eb;
+    background: rgba(255, 255, 255, 0.06);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    border-radius: 0;
+    cursor: pointer;
+    opacity: 0;
+    transition: opacity 0.15s ease, background 0.15s ease;
+  }
+
+  .code-block__copy:hover {
+    background: rgba(255, 255, 255, 0.12);
+    color: #ffffff;
+  }
+
+  .code-block__copy:focus-visible {
+    outline: 1px solid rgba(255, 255, 255, 0.4);
+    outline-offset: 2px;
+    opacity: 1;
+  }
+</style>

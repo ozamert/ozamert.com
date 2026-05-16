@@ -1,0 +1,268 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '../layouts/BaseLayout.astro';
+import TechChip from '../components/TechChip.astro';
+
+const entries = await getCollection('projects');
+const sorted = [...entries].sort(
+  (a, b) => b.data.date.getTime() - a.data.date.getTime()
+);
+
+// All seeded projects go into Current Focus for now
+const currentFocus = sorted;
+const ongoing: typeof sorted = [];
+const shipped: typeof sorted = [];
+---
+
+<BaseLayout
+  title="Projects"
+  description="Things Mert is building, maintaining, and has shipped."
+>
+  <h1 class="page-title">Projects</h1>
+
+  <!-- Current Focus -->
+  <section class="proj-section">
+    <div class="ghost-header" aria-hidden="true">Current Focus</div>
+    <h2 class="section-label">Current Focus</h2>
+    {currentFocus.length === 0 ? (
+      <p class="empty">Nothing here yet.</p>
+    ) : (
+      <ul class="project-list">
+        {currentFocus.map((p) => (
+          <li class="project-row">
+            <div class="proj-icon" aria-hidden="true">
+              {p.data.title.charAt(0).toUpperCase()}
+            </div>
+            <div class="proj-body">
+              <a href={`/projects/${p.id}`} class="proj-title">{p.data.title}</a>
+              <p class="proj-desc">{p.data.impact}</p>
+              {p.data.stack && p.data.stack.length > 0 && (
+                <div class="proj-chips">
+                  {p.data.stack.map((s) => <TechChip label={s} />)}
+                </div>
+              )}
+            </div>
+            <div class="proj-links">
+              {p.data.links?.repo && (
+                <a href={p.data.links.repo} target="_blank" rel="noopener noreferrer" class="proj-link">
+                  Repo ↗
+                </a>
+              )}
+              {p.data.links?.demo && (
+                <a href={p.data.links.demo} target="_blank" rel="noopener noreferrer" class="proj-link">
+                  Demo ↗
+                </a>
+              )}
+            </div>
+          </li>
+        ))}
+      </ul>
+    )}
+  </section>
+
+  <!-- Ongoing -->
+  <section class="proj-section">
+    <div class="ghost-header" aria-hidden="true">Ongoing</div>
+    <h2 class="section-label">Ongoing</h2>
+    {ongoing.length === 0 ? (
+      <p class="empty">Nothing here yet.</p>
+    ) : (
+      <ul class="project-list">
+        {ongoing.map((p) => (
+          <li class="project-row">
+            <div class="proj-icon">{p.data.title.charAt(0).toUpperCase()}</div>
+            <div class="proj-body">
+              <a href={`/projects/${p.id}`} class="proj-title">{p.data.title}</a>
+              <p class="proj-desc">{p.data.impact}</p>
+              {p.data.stack && p.data.stack.length > 0 && (
+                <div class="proj-chips">
+                  {p.data.stack.map((s) => <TechChip label={s} />)}
+                </div>
+              )}
+            </div>
+            <div class="proj-links">
+              {p.data.links?.repo && (
+                <a href={p.data.links.repo} target="_blank" rel="noopener noreferrer" class="proj-link">Repo ↗</a>
+              )}
+              {p.data.links?.demo && (
+                <a href={p.data.links.demo} target="_blank" rel="noopener noreferrer" class="proj-link">Demo ↗</a>
+              )}
+            </div>
+          </li>
+        ))}
+      </ul>
+    )}
+  </section>
+
+  <!-- Shipped -->
+  <section class="proj-section">
+    <div class="ghost-header" aria-hidden="true">Shipped</div>
+    <h2 class="section-label">Shipped</h2>
+    {shipped.length === 0 ? (
+      <p class="empty">Nothing here yet.</p>
+    ) : (
+      <ul class="project-list">
+        {shipped.map((p) => (
+          <li class="project-row">
+            <div class="proj-icon">{p.data.title.charAt(0).toUpperCase()}</div>
+            <div class="proj-body">
+              <a href={`/projects/${p.id}`} class="proj-title">{p.data.title}</a>
+              <p class="proj-desc">{p.data.impact}</p>
+              {p.data.stack && p.data.stack.length > 0 && (
+                <div class="proj-chips">
+                  {p.data.stack.map((s) => <TechChip label={s} />)}
+                </div>
+              )}
+            </div>
+            <div class="proj-links">
+              {p.data.links?.repo && (
+                <a href={p.data.links.repo} target="_blank" rel="noopener noreferrer" class="proj-link">Repo ↗</a>
+              )}
+              {p.data.links?.demo && (
+                <a href={p.data.links.demo} target="_blank" rel="noopener noreferrer" class="proj-link">Demo ↗</a>
+              )}
+            </div>
+          </li>
+        ))}
+      </ul>
+    )}
+  </section>
+</BaseLayout>
+
+<style>
+  .page-title {
+    font-size: 32px;
+    font-weight: 500;
+    color: #ffffff;
+    margin: 0 0 56px 0;
+    letter-spacing: -0.02em;
+  }
+
+  .proj-section {
+    position: relative;
+    margin-bottom: 72px;
+  }
+
+  .ghost-header {
+    position: absolute;
+    top: -20px;
+    left: -24px;
+    font-size: 64px;
+    font-weight: 700;
+    color: rgba(255, 255, 255, 0.06);
+    letter-spacing: -0.04em;
+    line-height: 1;
+    pointer-events: none;
+    user-select: none;
+    white-space: nowrap;
+    z-index: 0;
+  }
+
+  .section-label {
+    font-size: 16px;
+    font-weight: 500;
+    color: #e5e7eb;
+    margin: 0 0 24px 0;
+    position: relative;
+    z-index: 1;
+  }
+
+  .empty {
+    font-size: 14px;
+    color: #e5e7eb;
+    opacity: 0.4;
+    font-style: italic;
+    position: relative;
+    z-index: 1;
+  }
+
+  .project-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    position: relative;
+    z-index: 1;
+  }
+
+  .project-row {
+    display: grid;
+    grid-template-columns: 40px 1fr auto;
+    gap: 16px;
+    align-items: start;
+    padding: 16px 0;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+  }
+
+  .project-row:last-child {
+    border-bottom: none;
+  }
+
+  .proj-icon {
+    width: 40px;
+    height: 40px;
+    background: rgba(255, 255, 255, 0.06);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 6px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 16px;
+    font-weight: 600;
+    color: #e5e7eb;
+    opacity: 0.7;
+    flex-shrink: 0;
+  }
+
+  .proj-body {
+    min-width: 0;
+  }
+
+  .proj-title {
+    font-size: 16px;
+    font-weight: 500;
+    color: #e5e7eb;
+    text-decoration: none;
+    display: block;
+    margin-bottom: 4px;
+    transition: color 0.15s ease;
+  }
+
+  .proj-title:hover {
+    color: #ffffff;
+  }
+
+  .proj-desc {
+    font-size: 14px;
+    color: #e5e7eb;
+    opacity: 0.7;
+    margin: 0 0 10px 0;
+    line-height: 1.5;
+  }
+
+  .proj-chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+  }
+
+  .proj-links {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    align-items: flex-end;
+    flex-shrink: 0;
+  }
+
+  .proj-link {
+    font-size: 13px;
+    color: #e5e7eb;
+    opacity: 0.5;
+    text-decoration: none;
+    white-space: nowrap;
+    transition: opacity 0.15s ease;
+  }
+
+  .proj-link:hover {
+    opacity: 1;
+  }
+</style>

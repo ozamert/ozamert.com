@@ -1,0 +1,287 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '../layouts/BaseLayout.astro';
+import SubNav from '../components/SubNav.astro';
+
+const entries = await getCollection('photos');
+const photos = entries.sort(
+  (a, b) => b.data.date.getTime() - a.data.date.getTime()
+);
+
+// Hardcoded sample gallery (will swap to real images later)
+type Sample = {
+  i: number;
+  title: string;
+  where: string;
+  when: string;
+  ar: 'ar-16x9' | 'ar-4x5' | 'ar-1x1';
+  ph: 1|2|3|4|5|6|7|8|9|10;
+};
+
+const samples: Sample[] = [
+  { i: 0, title: 'Shibuya crossing, dusk', where: 'Tokyo', when: 'May 2026', ar: 'ar-16x9', ph: 1 },
+  { i: 1, title: 'Alfama backstreet', where: 'Lisbon', when: 'March 2026', ar: 'ar-4x5', ph: 2 },
+  { i: 2, title: 'Above the clouds', where: 'Mt. Fuji', when: 'April 2026', ar: 'ar-16x9', ph: 3 },
+  { i: 3, title: 'Stone path, late afternoon', where: 'Yanaka cemetery', when: 'May 2026', ar: 'ar-4x5', ph: 4 },
+  { i: 4, title: 'Tram 28, interior', where: 'Lisbon', when: 'March 2026', ar: 'ar-1x1', ph: 5 },
+  { i: 5, title: 'Cave shrine, candlelight', where: 'Enoshima', when: 'April 2026', ar: 'ar-4x5', ph: 6 },
+  { i: 6, title: 'Ryōan-ji sand garden', where: 'Kyoto', when: 'May 2026', ar: 'ar-16x9', ph: 7 },
+  { i: 7, title: 'Pastel de nata, close-up', where: 'Lisbon', when: 'March 2026', ar: 'ar-1x1', ph: 8 },
+  { i: 8, title: 'Shibuya at dusk', where: 'Tokyo', when: 'May 2026', ar: 'ar-16x9', ph: 9 },
+  { i: 9, title: 'Balconies, Bairro Alto', where: 'Lisbon', when: 'March 2026', ar: 'ar-4x5', ph: 10 },
+];
+
+const navItems = [
+  { label: 'Photos', href: '/photos' },
+  { label: 'Music', href: '/music' },
+  { label: 'Languages', href: '/languages' },
+  { label: 'Travel', href: '/travel' },
+];
+---
+
+<BaseLayout
+  title="Photos"
+  description="Travel and street photography by Mert Öztürk."
+>
+  <div class="full-bleed">
+    <div class="header-wrap">
+      <SubNav items={navItems} current="/photos" />
+      <h1 class="page-title">Photos</h1>
+      <p class="page-subtitle">Travel and street photography</p>
+    </div>
+
+    <div class="gallery" id="gallery">
+      {samples.map((s) => (
+        <a class="cell" data-i={s.i} data-where={s.where} data-when={s.when} data-title={s.title} href="#">
+          <span class={`frame ${s.ar}`}><span class={`photo ph-${s.ph}`}></span></span>
+          <span class="overlay"><span class="caption">{s.where} · {s.when}</span></span>
+        </a>
+      ))}
+    </div>
+  </div>
+
+  <div class="lightbox" id="lightbox" role="dialog" aria-modal="true" aria-label="photo viewer">
+    <div class="stage" id="lb-stage">
+      <button class="close" id="lb-close" aria-label="close">×</button>
+      <button class="prev" id="lb-prev" aria-label="previous">‹</button>
+      <div class="photo-large" id="lb-photo"></div>
+      <button class="next" id="lb-next" aria-label="next">›</button>
+      <div class="lb-meta">
+        <span><span class="lb-title" id="lb-title"></span> <span class="where" id="lb-where"></span></span>
+        <span class="count" id="lb-count"></span>
+      </div>
+    </div>
+  </div>
+</BaseLayout>
+
+<style is:global>
+  /* Override BaseLayout's container for this page only */
+  body.photos-page main.container {
+    max-width: 1800px !important;
+    padding: 0 16px !important;
+  }
+</style>
+
+<script>
+  document.body.classList.add('photos-page');
+</script>
+
+<style>
+  .full-bleed { width: 100%; padding: 0 16px; }
+
+  .header-wrap { padding: 56px 16px 24px; max-width: 1800px; margin: 0 auto; }
+  .page-title { font-size: 32px; font-weight: 500; letter-spacing: -0.015em; margin: 24px 0 6px; line-height: 1.15; }
+  .page-subtitle { font-style: italic; font-size: 16px; opacity: 0.5; margin: 0; }
+
+  .gallery {
+    max-width: 1800px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 16px;
+    padding: 0;
+  }
+  /* Mobile-first responsive: 1 → 2 → 3 → 4 → 5 cols (matches antfu.me + extra for wide screens) */
+  @media (min-width: 640px)  { .gallery { grid-template-columns: repeat(2, 1fr); } }
+  @media (min-width: 1024px) { .gallery { grid-template-columns: repeat(3, 1fr); } }
+  @media (min-width: 1280px) { .gallery { grid-template-columns: repeat(4, 1fr); } }
+  @media (min-width: 1600px) { .gallery { grid-template-columns: repeat(5, 1fr); } }
+
+  .cell {
+    position: relative;
+    overflow: hidden;
+    cursor: zoom-in;
+    background: #0a0a0a;
+    border: 1px solid rgba(255, 255, 255, 0.04);
+    display: block;
+    width: 100%;
+    text-decoration: none;
+    color: inherit;
+  }
+  .cell .frame {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 1 / 1;
+    overflow: hidden;
+    display: block;
+  }
+  .cell .photo {
+    position: absolute; inset: 0;
+    transition: transform 480ms cubic-bezier(0.2, 0.7, 0.2, 1);
+    background-size: cover; background-position: center;
+  }
+  .cell:hover .photo { transform: scale(1.02); }
+  .cell .overlay {
+    position: absolute; inset: 0;
+    background: rgba(0, 0, 0, 0.3);
+    opacity: 0;
+    transition: opacity 220ms ease;
+    display: flex; align-items: flex-end;
+    padding: 16px;
+    pointer-events: none;
+  }
+  .cell:hover .overlay { opacity: 1; }
+  .cell .caption {
+    font-family: ui-monospace, 'JetBrains Mono', Menlo, monospace;
+    font-size: 13px;
+    color: rgba(255, 255, 255, 0.85);
+    transform: translateY(6px);
+    transition: transform 280ms cubic-bezier(0.2, 0.7, 0.2, 1);
+  }
+  .cell:hover .caption { transform: translateY(0); }
+
+  /* Placeholder gradients — replace with real images later */
+  .ph-1  { background: radial-gradient(120% 80% at 30% 20%, #2a2a2a, #161616 55%, #0c0c0c); }
+  .ph-2  { background: radial-gradient(100% 90% at 70% 40%, #34302b, #1d1a17 55%, #0d0c0b); }
+  .ph-3  { background: linear-gradient(180deg, #2c3035, #1a1d20 50%, #0e1012); }
+  .ph-4  { background: radial-gradient(90% 70% at 50% 60%, #2a2622, #181613 60%, #0c0b0a); }
+  .ph-5  { background: linear-gradient(140deg, #1f1f1f, #2a2a2a 40%, #141414); }
+  .ph-6  { background: radial-gradient(80% 90% at 50% 30%, #1e2024, #14161a 60%, #0a0b0d); }
+  .ph-7  { background: radial-gradient(120% 80% at 60% 70%, #36322a, #1d1b17 55%, #0e0d0c); }
+  .ph-8  { background: radial-gradient(70% 70% at 50% 50%, #3a342b, #221e19 50%, #0e0c0a); }
+  .ph-9  { background: linear-gradient(180deg, #2b1f26, #1c1418 50%, #0c090b); }
+  .ph-10 { background: radial-gradient(120% 90% at 40% 30%, #2f2823, #1a1612 55%, #0c0a08); }
+
+  .ar-16x9 { --ar: 56.25%; }
+  .ar-4x5  { --ar: 125%; }
+  .ar-1x1  { --ar: 100%; }
+
+  /* Lightbox */
+  .lightbox {
+    position: fixed; inset: 0;
+    background: rgba(0, 0, 0, 0.9);
+    display: none;
+    align-items: center; justify-content: center;
+    z-index: 100;
+    cursor: zoom-out;
+  }
+  .lightbox.open { display: flex; }
+  .lightbox .stage {
+    position: relative;
+    width: 90vw; height: 90vh;
+    max-width: 1600px;
+    display: flex; align-items: center; justify-content: center;
+    cursor: default;
+  }
+  .lightbox .photo-large {
+    max-width: 100%;
+    max-height: calc(90vh - 80px);
+    aspect-ratio: 16/9;
+    background-size: cover; background-position: center;
+  }
+  .lightbox .lb-meta {
+    position: absolute; bottom: 0; left: 0; right: 0;
+    padding: 16px 4px;
+    display: flex; justify-content: space-between; align-items: baseline;
+    gap: 16px;
+    font-family: ui-monospace, 'JetBrains Mono', Menlo, monospace;
+    font-size: 13px;
+    color: rgba(255, 255, 255, 0.7);
+  }
+  .lightbox .lb-meta .lb-title { font-family: var(--font-inter, Inter, sans-serif); font-size: 14px; color: #e5e7eb; opacity: 0.9; }
+  .lightbox .lb-meta .where { opacity: 0.65; }
+  .lightbox .lb-meta .count { opacity: 0.45; }
+  .lightbox button {
+    position: absolute; top: 50%; transform: translateY(-50%);
+    background: transparent; color: #e5e7eb;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    width: 44px; height: 44px;
+    font: inherit; font-size: 20px;
+    cursor: pointer;
+    opacity: 0.6;
+    transition: opacity 160ms ease, border-color 160ms ease;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .lightbox button:hover { opacity: 1; border-color: rgba(255, 255, 255, 0.25); color: #fff; }
+  .lightbox .prev { left: -56px; }
+  .lightbox .next { right: -56px; }
+  .lightbox .close { top: -56px; right: -4px; transform: none; width: 36px; height: 36px; font-size: 16px; }
+
+  @media (max-width: 900px) {
+    .lightbox .prev { left: 8px; }
+    .lightbox .next { right: 8px; }
+    .lightbox .close { top: 12px; right: 12px; }
+    .lightbox .stage { width: 96vw; height: 92vh; }
+  }
+  @media (max-width: 600px) {
+    .header-wrap { padding: 36px 20px 20px; }
+    .page-title { font-size: 28px; }
+  }
+</style>
+
+<script>
+  (function () {
+    const cells = Array.from(document.querySelectorAll<HTMLAnchorElement>('.cell'));
+    const lb = document.getElementById('lightbox');
+    const lbPhoto = document.getElementById('lb-photo') as HTMLDivElement | null;
+    const lbTitle = document.getElementById('lb-title');
+    const lbWhere = document.getElementById('lb-where');
+    const lbCount = document.getElementById('lb-count');
+    const stage = document.getElementById('lb-stage');
+    if (!lb || !lbPhoto || !lbTitle || !lbWhere || !lbCount || !stage) return;
+    let i = 0;
+    function open(index: number) {
+      i = index;
+      render();
+      lb!.classList.add('open');
+      document.body.style.overflow = 'hidden';
+    }
+    function close() {
+      lb!.classList.remove('open');
+      document.body.style.overflow = '';
+    }
+    function prev() { i = (i - 1 + cells.length) % cells.length; render(); }
+    function next() { i = (i + 1) % cells.length; render(); }
+    function render() {
+      const c = cells[i];
+      const ph = c.querySelector<HTMLElement>('.photo');
+      if (ph && lbPhoto) {
+        const bg = window.getComputedStyle(ph).background;
+        lbPhoto.style.background = bg;
+        lbPhoto.style.backgroundSize = 'cover';
+        lbPhoto.style.backgroundPosition = 'center';
+      }
+      const frame = c.querySelector('.frame');
+      if (frame && lbPhoto) {
+        if (frame.classList.contains('ar-4x5')) lbPhoto.style.aspectRatio = '4 / 5';
+        else if (frame.classList.contains('ar-1x1')) lbPhoto.style.aspectRatio = '1 / 1';
+        else lbPhoto.style.aspectRatio = '16 / 9';
+      }
+      lbTitle!.textContent = c.dataset.title ?? '';
+      lbWhere!.textContent = '· ' + (c.dataset.where ?? '') + ' · ' + (c.dataset.when ?? '');
+      lbCount!.textContent = (i + 1) + ' / ' + cells.length;
+    }
+    cells.forEach((c, idx) => c.addEventListener('click', (e) => { e.preventDefault(); open(idx); }));
+    lb.addEventListener('click', (e) => { if (e.target === lb) close(); });
+    stage.addEventListener('click', (e) => e.stopPropagation());
+    document.getElementById('lb-close')?.addEventListener('click', close);
+    document.getElementById('lb-prev')?.addEventListener('click', prev);
+    document.getElementById('lb-next')?.addEventListener('click', next);
+    document.addEventListener('keydown', (e) => {
+      if (!lb!.classList.contains('open')) return;
+      if (e.key === 'Escape') close();
+      else if (e.key === 'ArrowLeft') prev();
+      else if (e.key === 'ArrowRight') next();
+    });
+  })();
+</script>

@@ -1,0 +1,10 @@
+Create a 30-day language plan for [LANGUAGE] from level [LEVEL] (A1/A2/B1/B2).
+
+Include:
+- Daily tasks: listening / reading / speaking / SRS (Anki)
+- 10-word weekly glossary
+- Mini-dialogue at end of each week for speaking practice
+- Weekly CEFR can-do checklist
+- Progress log table: Week | Skills practiced | New words | Confidence (1–5)
+
+Format as MDX hobby post.

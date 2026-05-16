@@ -1,0 +1,9 @@
+I'm learning [INSTRUMENT]. Create a 30-day practice plan (30–45 min/day) to reach: [GOAL]
+
+Include:
+- Daily micro-exercises
+- Metronome BPM targets per week
+- Weekly evaluation prompts
+- A tracking table: Date | Focus | BPM | Notes | Next step
+
+Format as MDX hobby post.

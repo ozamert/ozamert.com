@@ -1,0 +1,317 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+
+type Demo = {
+  title: string;
+  desc: string;
+  tags: string[];
+  date: string;
+  href: string;
+  source?: string;
+};
+
+const demos: Demo[] = [
+  {
+    title: 'antfu-style portfolio',
+    desc: 'First open-design output for ozamert.com — dark, type-led, ghost-year watermarks per post group.',
+    tags: ['astro', 'dark'],
+    date: '2026-05-16',
+    href: '#',
+  },
+  {
+    title: 'Pricing page experiment',
+    desc: '3-tier comparison layout test — sticky compare bar, feature matrix, restrained accent on the recommended plan.',
+    tags: ['saas'],
+    date: '2026-04-12',
+    href: '#',
+  },
+  {
+    title: 'Tokyo travel guide',
+    desc: 'Photo-led editorial layout for trip writeup — full-bleed lead image, asymmetric column rhythm, mono captions.',
+    tags: ['editorial', 'travel'],
+    date: '2026-03-08',
+    href: '#',
+  },
+  {
+    title: 'ML dashboard sketch',
+    desc: 'Training metrics dashboard with sparklines — loss/accuracy panels, run comparison, dense tabular numerics.',
+    tags: ['dashboard', 'ml'],
+    date: '2026-02-20',
+    href: '#',
+  },
+  {
+    title: 'Newsletter signup widget',
+    desc: 'Inline embed prototype — single-field signup with validation, success/error states, copy-as-snippet panel.',
+    tags: ['form', 'widget'],
+    date: '2026-01-14',
+    href: '#',
+  },
+  {
+    title: 'Year in review 2025',
+    desc: 'Editorial recap with stats and gallery — month-by-month grid, pull quotes, photo highlights, end-of-year ledger.',
+    tags: ['editorial', 'longform'],
+    date: '2025-12-30',
+    href: '#',
+  },
+];
+
+const filters: Array<{ key: string; label: string }> = [
+  { key: 'all', label: 'All' },
+  { key: 'astro', label: 'Astro' },
+  { key: 'dashboard', label: 'Dashboards' },
+  { key: 'editorial', label: 'Editorial' },
+  { key: 'form', label: 'Forms' },
+];
+---
+
+<BaseLayout
+  title="Demos"
+  description="Live prototypes and design experiments from open-design and the lab."
+>
+  <section class="pagehead">
+    <h1>Demos</h1>
+    <p class="subtitle">Live prototypes from open-design and other experiments</p>
+  </section>
+
+  <div class="filters" id="filters" role="tablist" aria-label="filter demos">
+    {filters.map((f, idx) => (
+      <button class={`pill ${idx === 0 ? 'active' : ''}`} data-tag={f.key}>{f.label}</button>
+    ))}
+  </div>
+
+  <div class="grid" id="grid">
+    {demos.map((d) => (
+      <article class="card" data-tags={d.tags.join(' ')}>
+        <a class="card-link" href={d.href} target="_blank" rel="noopener" aria-label={`open ${d.title}`}></a>
+        <div class="preview">
+          <div class="actions">
+            <a href={d.href} target="_blank" rel="noopener" aria-label="open in new tab" title="open">
+              <svg viewBox="0 0 24 24"><path d="M7 17 17 7"/><path d="M9 7h8v8"/></svg>
+            </a>
+            {d.source && (
+              <a href={d.source} target="_blank" rel="noopener" aria-label="view source" title="source">
+                <svg viewBox="0 0 24 24"><path d="m9 8-5 4 5 4"/><path d="m15 8 5 4-5 4"/></svg>
+              </a>
+            )}
+          </div>
+          <div class="placeholder" aria-hidden="true">preview · {d.title.toLowerCase()}</div>
+        </div>
+        <div class="body">
+          <h3 class="title">{d.title}</h3>
+          <p class="desc">{d.desc}</p>
+          <div class="meta-row">
+            <div class="tags">
+              {d.tags.map((t) => <span class="tag">{t}</span>)}
+            </div>
+            <span class="date">{d.date}</span>
+          </div>
+        </div>
+      </article>
+    ))}
+    <div class="empty" id="empty" hidden>No demos match that filter.</div>
+  </div>
+</BaseLayout>
+
+<style is:global>
+  /* Widen container for demos page — scales to viewport */
+  body.demos-page main.container {
+    max-width: 1800px !important;
+    padding: 0 24px !important;
+  }
+</style>
+
+<script>
+  document.body.classList.add('demos-page');
+</script>
+
+<style>
+  .pagehead { padding: 32px 0 16px; }
+  .pagehead h1 { font-size: 32px; font-weight: 500; letter-spacing: -0.015em; margin: 0 0 6px; line-height: 1.15; }
+  .pagehead .subtitle { font-style: italic; font-size: 16px; opacity: 0.5; margin: 0; max-width: 56ch; }
+
+  .filters {
+    padding: 8px 0 24px;
+    display: flex; flex-wrap: wrap; gap: 8px;
+    font-size: 13px;
+  }
+  .pill {
+    display: inline-flex; align-items: center;
+    padding: 6px 14px;
+    border-radius: 12px;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    background: transparent;
+    color: #e5e7eb;
+    opacity: 0.5;
+    cursor: pointer;
+    font: inherit;
+    transition: opacity 160ms ease, background 160ms ease, color 160ms ease, border-color 160ms ease;
+  }
+  .pill:hover { opacity: 0.9; }
+  .pill.active {
+    background: rgba(255, 255, 255, 0.08);
+    color: #ffffff;
+    opacity: 1;
+    border-color: rgba(255, 255, 255, 0.2);
+  }
+
+  .grid {
+    padding: 0 0 80px;
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+  /* Mobile-first: 1 → 2 → 3 → 4 cols scaling with viewport */
+  @media (min-width: 640px)  { .grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+  @media (min-width: 1024px) { .grid { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
+  @media (min-width: 1500px) { .grid { grid-template-columns: repeat(4, minmax(0, 1fr)); } }
+
+  .card {
+    position: relative;
+    display: flex; flex-direction: column;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    background: #0a0a0a;
+    color: #e5e7eb;
+    transform: translateY(0);
+    transition: transform 200ms cubic-bezier(0.2, 0.7, 0.2, 1), border-color 200ms ease;
+  }
+  .card:hover {
+    border-color: rgba(255, 255, 255, 0.2);
+    transform: translateY(-2px);
+  }
+  .card:hover .actions { opacity: 0.7; }
+
+  .preview {
+    position: relative;
+    aspect-ratio: 16 / 9;
+    width: 100%;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    overflow: hidden;
+    background: #050505;
+  }
+  .preview .placeholder {
+    position: absolute; inset: 0;
+    background-color: #0a0a0a;
+    background-image: radial-gradient(rgba(255, 255, 255, 0.07) 1px, transparent 1px);
+    background-size: 14px 14px;
+    background-position: 0 0;
+    display: flex; align-items: center; justify-content: center;
+    color: rgba(255, 255, 255, 0.25);
+    font-family: ui-monospace, 'JetBrains Mono', Menlo, monospace;
+    font-size: 12px;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+  }
+
+  .actions {
+    position: absolute;
+    top: 10px; right: 10px;
+    display: flex; gap: 6px;
+    opacity: 0;
+    transition: opacity 200ms ease;
+    z-index: 2;
+  }
+  .actions a {
+    width: 28px; height: 28px;
+    display: inline-flex; align-items: center; justify-content: center;
+    background: rgba(0, 0, 0, 0.55);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    color: #e5e7eb;
+    backdrop-filter: blur(4px);
+    -webkit-backdrop-filter: blur(4px);
+  }
+  .actions a:hover {
+    color: #fff;
+    border-color: rgba(255, 255, 255, 0.2);
+    background: rgba(0, 0, 0, 0.75);
+  }
+  .actions svg {
+    width: 14px; height: 14px;
+    stroke: currentColor; fill: none;
+    stroke-width: 1.6; stroke-linecap: round; stroke-linejoin: round;
+  }
+
+  .body { padding: 16px; display: flex; flex-direction: column; gap: 8px; min-height: 132px; }
+  .title {
+    font-size: 16px; font-weight: 500; line-height: 1.3;
+    letter-spacing: -0.005em;
+    margin: 0;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    color: #e5e7eb;
+  }
+  .desc {
+    font-size: 14px; line-height: 1.45;
+    opacity: 0.7;
+    margin: 0;
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+  .meta-row {
+    margin-top: auto;
+    padding-top: 4px;
+    display: flex; justify-content: space-between; align-items: center;
+    gap: 12px;
+  }
+  .tags { display: flex; flex-wrap: wrap; gap: 6px; }
+  .tag {
+    font-size: 11px; line-height: 1;
+    letter-spacing: 0.02em;
+    padding: 5px 8px;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    color: #e5e7eb;
+    opacity: 0.65;
+    text-transform: lowercase;
+  }
+  .date {
+    font-family: ui-monospace, 'JetBrains Mono', Menlo, monospace;
+    font-size: 12px;
+    opacity: 0.5;
+    letter-spacing: 0.01em;
+    white-space: nowrap;
+  }
+
+  .card-link {
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+  }
+
+  .empty {
+    grid-column: 1 / -1;
+    padding: 80px 24px;
+    text-align: center;
+    opacity: 0.45;
+    font-size: 14px;
+  }
+
+  @media (max-width: 640px) {
+    .pagehead h1 { font-size: 28px; }
+  }
+</style>
+
+<script>
+  (function () {
+    const pills = Array.from(document.querySelectorAll<HTMLButtonElement>('.pill'));
+    const cards = Array.from(document.querySelectorAll<HTMLElement>('.card'));
+    const empty = document.getElementById('empty');
+    pills.forEach((p) => {
+      p.addEventListener('click', () => {
+        pills.forEach((x) => x.classList.remove('active'));
+        p.classList.add('active');
+        const tag = p.dataset.tag;
+        let visible = 0;
+        cards.forEach((c) => {
+          const tags = (c.dataset.tags || '').split(/\s+/);
+          const show = tag === 'all' || (tag !== undefined && tags.includes(tag));
+          c.style.display = show ? '' : 'none';
+          if (show) visible++;
+        });
+        if (empty) empty.hidden = visible !== 0;
+      });
+    });
+  })();
+</script>

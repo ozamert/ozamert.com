@@ -1,0 +1,65 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '../layouts/BaseLayout.astro';
+import SubNav from '../components/SubNav.astro';
+import PostList from '../components/PostList.astro';
+
+const all = await getCollection('hobbies');
+const entries = all.filter((e) => e.data.sub === 'languages');
+const posts = entries
+  .map((e) => ({
+    title: e.data.title,
+    date: e.data.date,
+    slug: `/languages/${e.id}`,
+  }))
+  .sort((a, b) => b.date.getTime() - a.date.getTime());
+
+const navItems = [
+  { label: 'Photos', href: '/photos' },
+  { label: 'Music', href: '/music' },
+  { label: 'Languages', href: '/languages' },
+  { label: 'Travel', href: '/travel' },
+];
+---
+
+<BaseLayout
+  title="Languages"
+  description="Spanish, German, Japanese — learning out loud by Mert Öztürk."
+>
+  <SubNav items={navItems} current="/languages" />
+
+  <h1 class="page-title">Languages</h1>
+  <p class="page-subtitle">Spanish, German, Japanese — learning out loud</p>
+
+  {posts.length === 0 ? (
+    <p class="empty">No posts yet — check back soon.</p>
+  ) : (
+    <PostList posts={posts} />
+  )}
+</BaseLayout>
+
+<style>
+  .page-title {
+    font-size: 32px;
+    font-weight: 500;
+    color: #ffffff;
+    margin: 0 0 8px 0;
+    letter-spacing: -0.02em;
+  }
+
+  .page-subtitle {
+    font-size: 16px;
+    font-style: italic;
+    color: #e5e7eb;
+    opacity: 0.5;
+    margin: 0 0 48px 0;
+  }
+
+  .empty {
+    font-size: 14px;
+    color: #e5e7eb;
+    opacity: 0.4;
+    margin-top: 48px;
+    font-style: italic;
+  }
+</style>

@@ -1,0 +1,11 @@
+Take this outline and expand into a 1200–1800 word MDX draft.
+
+Rules:
+- Simple language, numbered steps, runnable code blocks
+- Add a "Common Errors & Fixes" section
+- Add a "Checklist" at the end
+- Preserve and output the front-matter at the top
+- Use <Callout> for notes and gotchas
+
+Outline:
+[OUTLINE]

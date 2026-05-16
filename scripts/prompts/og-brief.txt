@@ -1,0 +1,12 @@
+Create a visual brief for an OG image / thumbnail for this post.
+
+Include:
+- Title text overlay (max 8 words)
+- Icon or illustration idea
+- Background motif
+- Color palette (3 hex values)
+- 3 layout options described in words
+- open-design skill to use: social-carousel or magazine-poster
+
+Post title: [TITLE]
+Category: [CATEGORY]

@@ -1,0 +1,55 @@
+---
+interface NavItem {
+  label: string;
+  href: string;
+}
+
+interface Props {
+  items: NavItem[];
+  current?: string;
+}
+
+const { items, current = '' } = Astro.props;
+---
+
+<nav class="subnav">
+  {items.map((item) => (
+    <a
+      href={item.href}
+      class:list={['subnav-item', { active: item.href === current }]}
+    >
+      {item.label}
+    </a>
+  ))}
+</nav>
+
+<style>
+  .subnav {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 16px;
+    flex-wrap: wrap;
+    margin-top: 24px;
+    margin-bottom: 48px;
+  }
+
+  .subnav-item {
+    font-family: var(--font-inter, Inter, sans-serif);
+    font-size: 24px;
+    font-weight: 500;
+    color: #e5e7eb;
+    text-decoration: none;
+    opacity: 0.3;
+  }
+
+  .subnav-item:hover {
+    opacity: 0.7;
+    color: #ffffff;
+  }
+
+  .subnav-item.active {
+    opacity: 1;
+    color: #ffffff;
+  }
+</style>

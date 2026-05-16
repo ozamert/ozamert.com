@@ -1,0 +1,64 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '../layouts/BaseLayout.astro';
+import SubNav from '../components/SubNav.astro';
+import PostList from '../components/PostList.astro';
+
+const entries = await getCollection('data-science');
+const posts = entries
+  .map((e) => ({
+    title: e.data.title,
+    date: e.data.date,
+    slug: `/data-science/${e.id}`,
+    readingTime: e.data.readingTime,
+  }))
+  .sort((a, b) => b.date.getTime() - a.date.getTime());
+
+const navItems = [
+  { label: 'Data Engineering', href: '/data-engineering' },
+  { label: 'Data Science', href: '/data-science' },
+  { label: 'ML Engineering', href: '/ml-engineering' },
+];
+---
+
+<BaseLayout
+  title="Data Science"
+  description="Posts on models, analysis, baselines, and decisions."
+>
+  <SubNav items={navItems} current="/data-science" />
+
+  <h1 class="page-title">Data Science</h1>
+  <p class="page-subtitle">Models, analysis, baselines, decisions</p>
+
+  {posts.length === 0 ? (
+    <p class="empty">No posts yet — check back soon.</p>
+  ) : (
+    <PostList posts={posts} />
+  )}
+</BaseLayout>
+
+<style>
+  .page-title {
+    font-size: 32px;
+    font-weight: 500;
+    color: #ffffff;
+    margin: 0 0 8px 0;
+    letter-spacing: -0.02em;
+  }
+
+  .page-subtitle {
+    font-size: 16px;
+    font-style: italic;
+    color: #e5e7eb;
+    opacity: 0.5;
+    margin: 0 0 48px 0;
+  }
+
+  .empty {
+    font-size: 14px;
+    color: #e5e7eb;
+    opacity: 0.4;
+    margin-top: 48px;
+    font-style: italic;
+  }
+</style>

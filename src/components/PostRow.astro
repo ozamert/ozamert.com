@@ -1,0 +1,79 @@
+---
+import YearWatermark from './YearWatermark.astro';
+
+interface Props {
+  title: string;
+  date: Date;
+  slug: string;
+  readingTime?: number;
+  yearLabel?: number;
+  external?: string;
+}
+
+const { title, date, slug, readingTime, yearLabel, external } = Astro.props;
+
+const formattedDate = new Intl.DateTimeFormat('en-US', {
+  month: 'short',
+  day: 'numeric',
+}).format(date);
+
+const href = external ?? slug;
+---
+
+<a href={href} class="post-row" target={external ? '_blank' : undefined} rel={external ? 'noopener noreferrer' : undefined}>
+  {yearLabel && <YearWatermark year={yearLabel} />}
+  <span class="title">
+    {title}
+    {external && <span class="ext">↗</span>}
+  </span>
+  <span class="meta">
+    {formattedDate}{readingTime ? ` · ${readingTime}min` : ''}
+  </span>
+</a>
+
+<style>
+  .post-row {
+    display: flex;
+    align-items: baseline;
+    gap: 8px;
+    text-decoration: none;
+    color: #e5e7eb;
+    position: relative;
+    isolation: isolate;
+    margin-bottom: 8px;
+    min-height: 28px;
+    padding: 4px 0;
+  }
+
+  .post-row .title,
+  .post-row .meta {
+    position: relative;
+    z-index: 1;
+  }
+
+  .post-row:hover .title {
+    color: #ffffff;
+  }
+
+  .title {
+    font-family: var(--font-inter, Inter, sans-serif);
+    font-size: 16px;
+    font-weight: 400;
+    line-height: 1.4;
+    color: #e5e7eb;
+  }
+
+  .ext {
+    opacity: 0.5;
+    font-size: inherit;
+    margin-left: 4px;
+  }
+
+  .meta {
+    font-family: var(--font-inter, Inter, sans-serif);
+    font-size: 13px;
+    opacity: 0.5;
+    white-space: nowrap;
+    flex-shrink: 0;
+  }
+</style>
